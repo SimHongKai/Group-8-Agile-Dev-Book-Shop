@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Hash;
+use Session;
 
 class CustomAuthController extends Controller
 {
@@ -28,7 +30,7 @@ class CustomAuthController extends Controller
         $user->userID = $request->userID;
         $user->userName = $request->userName;
         $user->userEmail = $request->userEmail;
-        $user->userPassword = $request->userPassword;
+        $user->userPassword = Hash::make($request->userPassword);
         $user->userPrivilige = $request->privilige;
         $user->country = "";
         $user->state = "";
@@ -43,6 +45,43 @@ class CustomAuthController extends Controller
 
         else{
             return back()->with('fail', 'Something Wrong');
+        }
+        
+    }
+
+    public function loginUser(Request $request)
+    {
+        $request->validate([
+            'userID'=>'required',
+            'userPassword' => 'required|min:8|max:12',
+        ]);
+        $user = User::where('userID','=',$request->userID)->first();
+        if($user){
+            if(Hash::check($request->userPassword, $user->userPassword)){
+                $request->session() -> put('loginId',$user->userID);
+                return redirect('dashboard');
+            }
+            else{
+                return back()->with('fail','Password Incorrect');
+            }
+        }
+        else{
+            return back()->with('fail','This User ID is not registered');
+        }
+    }
+
+    public function dashboard(){
+        $data = array ();
+        if (Session::has('loginId')){
+            $data = User::where('userID', '=', Session::get('loginId'))->first();
+        }
+        return view ('dashboard', compact('data'));
+    }
+
+    public function logout(){
+        if(Session::has('loginId')){
+            Session::pull('loginId');
+            return redirect('login');
         }
     }
 }

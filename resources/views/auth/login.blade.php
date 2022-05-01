@@ -15,14 +15,23 @@
             <div class="col-md-4 col-md-offset-4" style="margin-top:20px;">
                 <h4>Login</h4>
                 <hr>
-                <form>
+                <form action="{{route('login-user')}}" method="post">
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">{{Session::get('success')}}</div>
+                    @endif
+                    @if(Session::has('fail'))
+                    <div class="alert alert-danger">{{Session::get('fail')}}</div>
+                    @endif
+                    @csrf
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" class="form-control" placeholder="Enter Email" name="email" value="">
+                        <label for="id">User ID</label>
+                        <input type="text" class="form-control" placeholder="Enter User ID" name="userID" value="{{old('userID')}}">
+                        <span class="text-danger">@error('userID') {{$message}} @enderror</span>
                     </div>
                     <div class="form-group">
                         <label for="password">Password</label>
-                        <input type="password" class="form-control" placeholder="Enter Password" name="password" value="">
+                        <input type="password" class="form-control" placeholder="Enter Password" name="userPassword" value="{{old('userPassword')}}">
+                        <span class="text-danger">@error('userPassword') {{$message}} @enderror</span>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Sign In</button>
