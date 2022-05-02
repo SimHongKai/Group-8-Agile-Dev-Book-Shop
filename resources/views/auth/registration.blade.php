@@ -45,8 +45,8 @@
                         <span class="text-danger">@error('userPassword') {{$message}} @enderror</span>
                     </div>
                     <div class="form-group">
-                        <label for="password">Privilige</label>
-                        <input type="password" class="form-control" placeholder="1 - User, 2 - Admin" name="privilige" value="{{old('privilige')}}">
+                        <label for="privilige">Privilige</label>
+                        <input type="text" class="form-control" placeholder="1 - User, 2 - Admin" name="privilige" value="{{old('privilige')}}">
                         <span class="text-danger">@error('privilige') {{$message}} @enderror</span>
                     </div>
                     

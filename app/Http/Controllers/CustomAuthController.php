@@ -21,10 +21,10 @@ class CustomAuthController extends Controller
     {
         $request->validate([
             'userID'=>'required|unique:users',
-            'userName'=>'required',
+            'userName'=>'required|regex:/^[a-zA-Z]+$/u',
             'userEmail' => 'required|email',
-            'userPassword' => 'required|min:8|max:12',
-            'privilige'=>'required'
+            'userPassword' => 'required|min:8|max:12|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
+            'privilige'=>'required|gt:0|lt:3'
         ]);
         $user = new User();
         $user->userID = $request->userID;
