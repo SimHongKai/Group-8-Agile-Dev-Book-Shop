@@ -5,15 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
-    <title>Custom Authentication</title>
+    <title>Sign In Page</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
 </head>
 
 <body>
+    <?php
+        include ('C:\xampp\htdocs\Book_Shop\resources\views\header.blade.php');
+    ?>
     <div class="container">
-        <div class="row">
-            <div class="col-md-4 col-md-offset-4" style="margin-top:20px;">
-                <h4>Login</h4>
+        <div id='content2'>
+            <div id='sign-in-form'>
+             <h1><font face='Impact'>Sign In</font></h1>
                 <hr>
                 <form action="{{route('login-user')}}" method="post">
                     @if(Session::has('success'))
@@ -28,20 +31,30 @@
                         <input type="text" class="form-control" placeholder="Enter User ID" name="userID" value="{{old('userID')}}">
                         <span class="text-danger">@error('userID') {{$message}} @enderror</span>
                     </div>
+                    <br>
+                    <br>
                     <div class="form-group">
                         <label for="password">Password</label>
                         <input type="password" class="form-control" placeholder="Enter Password" name="userPassword" value="{{old('userPassword')}}">
                         <span class="text-danger">@error('userPassword') {{$message}} @enderror</span>
                     </div>
+                    <br>
+                    <br>
+            
                     <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Sign In</button>
                     </div>
                     <br>
-                    <a href ="registration">New USER!! REGISTER</a>
-                </form>
+                    <p1>Would you like to create an account ?</p1>
+                    <a href ="registration">Sign Up</a>
+                </form> 
             </div>
+            <?php
+            include ('C:\xampp\htdocs\Book_Shop\resources\views\footer.blade.php');
+            ?>
         </div>
     </div>
+    
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 </html>

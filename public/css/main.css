@@ -1,0 +1,83 @@
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font: 12px Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #061C37;
+	background: #F5F5DC ;
+}
+
+*
+  {
+  margin: 0 auto 0 auto;
+  text-align:middle;}
+
+#container {
+  display: block; 
+  height:auto;
+  position: relative; 
+  width: 1540px;
+  align-content: center;
+}
+
+#mainpic {
+    background-image:url(../images/header.png);
+    width:1540px;
+    height:200px;
+ }
+
+#menu {
+    background-image:url(../images/menuBarBg.png);
+    width:1540px;
+    height:48.5px;
+    float:center;
+    clear:both;
+ }
+
+ #content {
+    width:1300px;
+    height:auto;
+    background-color: white;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+ 
+ #content2 {
+    width:1300px;
+    height:auto;
+    background-image: url(../images/SignIn.JPG);
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+
+ #sign-in-form{
+    width:500px;
+    background-color: white;
+    padding:100px;
+    margin:0% auto 0;
+}
+ 
+ #content3 {
+    width:1300px;
+    height:auto;
+    background-image: url(../images/SignUp.JPG);
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+
+ #footer {
+    width: 1280px;
+    height: 40px;
+    padding: 10px 0 4px 0;
+    text-align: center;
+    background: #555;
+    color: #AAA;
+    border-top: 1px solid #FFF;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-size: 100%;
+}

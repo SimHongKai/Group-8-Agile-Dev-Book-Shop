@@ -59,7 +59,7 @@ class CustomAuthController extends Controller
         if($user){
             if(Hash::check($request->userPassword, $user->userPassword)){
                 $request->session() -> put('loginId',$user->userID);
-                return redirect('dashboard');
+                return redirect('home');
             }
             else{
                 return back()->with('fail','Password Incorrect');
@@ -70,12 +70,13 @@ class CustomAuthController extends Controller
         }
     }
 
-    public function dashboard(){
+    public function home(){
         $data = array ();
+
         if (Session::has('loginId')){
-            $data = User::where('userID', '=', Session::get('loginId'))->first();
+            $data = User::where('userID', '=', Session::get('loginId'))->first(); 
         }
-        return view ('dashboard', compact('data'));
+        return view ('header', compact('data'));
     }
 
     public function logout(){
