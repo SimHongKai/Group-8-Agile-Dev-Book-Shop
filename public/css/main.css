@@ -1,3 +1,4 @@
+/*Main BG colour*/
 body {
 	margin: 0;
 	padding: 0;
@@ -21,20 +22,66 @@ body {
   align-content: center;
 }
 
+/*Header Picture*/
 #mainpic {
     background-image:url(../images/header.png);
     width:1540px;
     height:200px;
  }
 
+ /*Purple Bar Picture*/
 #menu {
     background-image:url(../images/menuBarBg.png);
     width:1540px;
-    height:48.5px;
+    height:55px;
     float:center;
     clear:both;
  }
 
+/*Links in purple bar*/
+#menu a {
+	float: left;
+	width: 100px;
+	height: 40px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+	padding-top: 18px;
+	font-size: 15px;
+}
+
+/*Empty spaces in purple bar, 150 width*/
+#menu p1 {
+	float: left;
+	width: 150px;
+	height: 40px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+	padding-top: 17px;
+	font-size: 15px;
+}
+
+/*Empty spaces in purple bar, 150 width*/
+#menu p2 {
+	float: left;
+	width: 20px;
+	height: 40px;
+	display: block;
+	text-align: left;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+   padding-left: 5px;
+	padding-top: 6px;
+	font-size: 15px;
+}
+
+/*Home page content*/
  #content {
     width:1300px;
     height:auto;
@@ -44,7 +91,8 @@ body {
     padding-bottom:5px;
  }
  
- #content2 {
+ /*Sign In content*/
+ #signInContent {
     width:1300px;
     height:auto;
     background-image: url(../images/SignIn.JPG);
@@ -53,14 +101,16 @@ body {
     padding-bottom:5px;
  }
 
- #sign-in-form{
+  /*Sign In form*/
+ #sign-in-up-form{
     width:500px;
     background-color: white;
     padding:100px;
     margin:0% auto 0;
 }
  
- #content3 {
+ /*Sign Up content*/
+ #signUpContent {
     width:1300px;
     height:auto;
     background-image: url(../images/SignUp.JPG);

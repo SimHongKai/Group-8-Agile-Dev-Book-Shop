@@ -9,16 +9,20 @@ use Session;
 
 class CustomAuthController extends Controller
 {
+    //Function to go sign in page
     public function login(){
         return view ("auth.login");
     }
 
+    //Function to go sign up page
     public function registration(){
         return view ("auth.registration");
     }
 
+    //Function to sign up user
     public function registerUser(Request $request)
     {
+        //validate before storing to database
         $request->validate([
             'userID'=>'required|unique:users',
             'userName'=>'required|regex:/^[a-zA-Z]+$/u',
@@ -26,6 +30,7 @@ class CustomAuthController extends Controller
             'userPassword' => 'required|min:8|max:12|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
             'privilige'=>'required|gt:0|lt:3'
         ]);
+        //Create new object and store to database
         $user = new User();
         $user->userID = $request->userID;
         $user->userName = $request->userName;
@@ -49,12 +54,15 @@ class CustomAuthController extends Controller
         
     }
 
+    //Function after press log in button
     public function loginUser(Request $request)
     {
+        //validate before compare to database
         $request->validate([
             'userID'=>'required',
             'userPassword' => 'required|min:8|max:12',
         ]);
+        //Compare to database
         $user = User::where('userID','=',$request->userID)->first();
         if($user){
             if(Hash::check($request->userPassword, $user->userPassword)){
@@ -70,15 +78,17 @@ class CustomAuthController extends Controller
         }
     }
 
+    //Function after press home button
     public function home(){
         $data = array ();
 
         if (Session::has('loginId')){
             $data = User::where('userID', '=', Session::get('loginId'))->first(); 
         }
-        return view ('header', compact('data'));
+        return view ('home', compact('data'));
     }
 
+    //Function after press log out button
     public function logout(){
         if(Session::has('loginId')){
             Session::pull('loginId');

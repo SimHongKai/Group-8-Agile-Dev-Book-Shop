@@ -19,9 +19,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Linked with CustomAuthController, will redirect to the page pressed
 Route::get('/login', [CustomAuthController::class, 'login']);
 Route::get('/registration',[CustomAuthController::class, 'registration']);
 Route::post('/register-user',[CustomAuthController::class,'registerUser'])->name('register-user');
 Route::post('login-user',[CustomAuthController::class,'loginUser'])->name('login-user');
-Route::get('/home',[CustomAuthController::class,'home']);
 Route::get('/logout',[CustomAuthController::class,'logout']);
+Route::get('/home',[CustomAuthController::class,'home']);

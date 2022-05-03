@@ -14,8 +14,8 @@
         include ('C:\xampp\htdocs\Book_Shop\resources\views\header.blade.php');
     ?>
     <div class="container">
-        <div id='content3'>
-            <div id='sign-in-form'>
+        <div id='signUpContent'>
+            <div id='sign-in-up-form'>
             <h1><font face='Impact'>Sign Up</font></h1>
                 <hr>
                 <form action="{{route('register-user')}}" method="post">
