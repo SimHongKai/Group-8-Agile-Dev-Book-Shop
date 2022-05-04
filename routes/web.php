@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CustomAuthController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -17,6 +19,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', function () {
-    return view('dbconntest');
-});
+//Linked with CustomAuthController, will redirect to the page pressed
+Route::get('/login', [CustomAuthController::class, 'login']);
+Route::get('/registration',[CustomAuthController::class, 'registration']);
+Route::post('/register-user',[CustomAuthController::class,'registerUser'])->name('register-user');
+Route::post('/login-user',[CustomAuthController::class,'loginUser'])->name('login-user');
+Route::get('/logout',[CustomAuthController::class,'logout']);
+Route::get('/home',[CustomAuthController::class,'home']);
+//Route for stocks
+Route::post('/add-stock',[StockController::class,'addStock'])->name('add-stock');
+
+// General Route for moving to new pages
+Route::get('/{new_page}',[CustomAuthController::class,'new_page']);    

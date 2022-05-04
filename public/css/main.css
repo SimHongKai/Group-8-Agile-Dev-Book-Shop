@@ -1,0 +1,167 @@
+/*Main BG colour*/
+body {
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	font: 12px Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	color: #061C37;
+	background: #F5F5DC ;
+}
+
+*
+  {
+  margin: 0 auto 0 auto;
+  text-align:middle;}
+
+#container {
+  display: block; 
+  height:auto;
+  position: relative; 
+  width: 1540px;
+  align-content: center;
+}
+
+/*Header Picture*/
+#mainpic {
+    background-image:url(../images/header.png);
+    width:1540px;
+    height:200px;
+ }
+
+ /*Purple Bar Picture*/
+#menu {
+    background-image:url(../images/menuBarBg.png);
+    width:1540px;
+    height:55px;
+    float:center;
+    clear:both;
+ }
+
+/*Links in purple bar*/
+#menu a {
+	float: left;
+	width: 100px;
+	height: 40px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+	padding-top: 18px;
+	font-size: 15px;
+}
+
+/*Empty spaces in purple bar, 150 width*/
+#menu p1 {
+	float: left;
+	width: 150px;
+	height: 40px;
+	display: block;
+	text-align: center;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+	padding-top: 17px;
+	font-size: 15px;
+}
+
+/*Empty spaces in purple bar, 150 width*/
+#menu p2 {
+	float: left;
+	width: 20px;
+	height: 40px;
+	display: block;
+	text-align: left;
+	text-decoration: none;
+	color: #ffffff;
+	font-weight: bold;
+   padding-left: 5px;
+	padding-top: 6px;
+	font-size: 15px;
+}
+
+/*Home page content*/
+ #content {
+    width:1300px;
+    height:auto;
+    background-color: white;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+ 
+ /*Sign In content*/
+ #signInContent {
+    width:1300px;
+    height:auto;
+    background-image: url(../images/SignIn.JPG);
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+
+  /*Sign In form*/
+ #sign-in-up-form{
+    width:500px;
+    background-color: white;
+    padding:100px;
+    margin:0% auto 0;
+}
+ 
+ /*Sign Up content*/
+ #signUpContent {
+    width:1300px;
+    height:auto;
+    background-image: url(../images/SignUp.JPG);
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+ }
+
+ #footer {
+    width: 1280px;
+    height: 40px;
+    padding: 10px 0 4px 0;
+    text-align: center;
+    background: #555;
+    color: #AAA;
+    border-top: 1px solid #FFF;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-size: 100%;
+}
+
+/*Display Stock Tables*/
+#stockTable{
+   background-color: white;
+   shape-margin: round;
+   box-shadow: -5px 5px 10px 5px gray;
+   border-radius: 20px;
+   border: #AAA;
+   width: 100%;
+   padding: 8px;
+}
+
+#stockTableHeader {
+   background-color: lightgreen;
+   color: white;
+   padding: 8px;
+   text-align: center;
+}
+
+#add-stock-content {
+   width:1300px;
+    height:auto;
+    background-color: white;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+}
+
+#add-stock-form {
+   width:50%;
+   background-color: white;
+   padding:50px;
+   margin:0% auto 0;
+}
