@@ -79,4 +79,22 @@ class StockController extends Controller
         
         
     }
+
+    /**
+     * Gets the Specified Stock
+     *
+     * @param  \App\Models\Stock  $stock
+     * @return \Illuminate\Http\Response
+     */
+    public function getStock(Request $request)
+    {
+        //Create new stock object and check if exists
+        if($request->has(['ISBN13']) && $request->ISBN13!=null)
+            $stock = Stock::find($request->ISBN13);
+            // Update Qty if exists
+            if($stock){
+                return $stock;
+            }
+            return null;
+    }
 }

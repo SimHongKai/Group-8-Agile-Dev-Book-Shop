@@ -29,7 +29,7 @@
                         <label for="ISBN13" class="col-4 col-form-label">ISBN-13</label> 
                         <div class="col-8">
                             <input id="ISBN13" name="ISBN13" placeholder="ISBN-13" type="text" class="form-control" 
-                            required="required" value="{{old('ISBN13')}}">
+                            required="required" value="{{old('ISBN13')}}" onkeyup="getExistingStock(this.value)">
                             <span class="text-danger">@error('ISBN13') {{$message}} @enderror</span>
                         </div>
                     </div>
@@ -107,7 +107,58 @@
             @include('footer')
         </div>
     </div>
-    
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js">
+    </script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        type="text/javascript">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+    </script>
+    <script>
+  
+  // onkeyup event will occur when the user 
+  // release the key and calls the function
+  // assigned to this event
+  function getExistingStock(str) {
+    if (str.length == 0) {
+        return;
+    }
+    else {
+        // Creates a new XMLHttpRequest object
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.onreadystatechange = function () {
+            // Defines a function to be called when
+            // the readyState property changes
+            if (this.readyState == 4 && this.status == 200) {
+                    
+                    // parse the returned JSON
+                    if (this.responseText == null){
+                        return;
+                    }else{
+                        var stock = JSON.parse(this.responseText);
+                    }
+                    //fill in form data
+                    document.getElementById("bookName").value = stock.bookName;
+                    document.getElementById("bookDesc").value = stock.bookDescription;
+                    document.getElementById("bookAuthor").value = stock.bookAuthor;
+                    document.getElementById("publicationDate").value = stock.publicationDate;
+                    document.getElementById("tradePrice").value = stock.tradePrice;
+                    document.getElementById("retailPrice").value = stock.retailPrice;
+                    document.getElementById("qty").value = stock.qty;
+            }
+        };
+        // open xml http request
+        xmlhttp.open("POST", "addStocks/get-stock", true);
+        var data = '_token={{csrf_token()}}&ISBN13=' + str;
+        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+        // xhttp.open("GET", "filename", true);
+            
+        // Sends the request to the server
+        xmlhttp.send(data);
+    }
+  }
+</script>
 </body>
 </html>
 
