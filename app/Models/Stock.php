@@ -9,4 +9,8 @@ class Stock extends Model
 {
     use HasFactory;
     protected $table = 'stock';
+    protected $primaryKey = 'ISBN13';
+    protected $fillable = ['ISBN13', 'bookName', 'bookAuthor', 'publicationDate',
+     'bookDescription', 'coverImg', 'tradePrice', 'retailPrice', 'qty'] ;
+     public $timestamps = false;
 }

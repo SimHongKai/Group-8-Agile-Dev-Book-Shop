@@ -8,80 +8,15 @@ use Illuminate\Http\Request;
 class StockController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
+     * Gets list of all stock
      *
      * @param  \App\Models\Stock  $stock
      * @return \Illuminate\Http\Response
      */
-    public function show(Stock $stock)
-    {
-        //
+    public function allStock(){
+
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Stock $stock)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Stock $stock)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Stock  $stock
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Stock $stock)
-    {
-        //
-    }
 
     /**
      * Adds stock qty if exists creates new stock if it does not
@@ -89,41 +24,59 @@ class StockController extends Controller
      * @param  \App\Models\Stock  $stock
      * @return \Illuminate\Http\Response
      */
-    public function addStock(Stock $stock)
+    public function addStock(Request $request)
     {
+        
         //validate book info before storing to database
         $request->validate([
-            'userID'=>'required|unique:users',
-            'userName'=>'required|regex:/^[a-zA-Z]+$/u',
-            'userEmail' => 'required|email',
-            'userPassword' => 'required|min:8|max:12|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
-            'privilige'=>'required|gt:0|lt:3'
+            'ISBN13'=>'required|min:13|max:13|regex:/[0-9]/',
+            'bookName'=>'required',
+            'bookDesc' => 'required',
+            'bookAuthor' => 'required|regex:/[a-z]/|regex:/[A-Z]/',
+            'publicationDate'=>'required|date_format:Y-m-d|before_or_equal:today',
+            'retailPrice'=>'required|numeric|min:20|max:100',
+            'tradePrice'=>'required|numeric|min:20|max:100',
+            'qty'=>'required|numeric|min:0'
         ]);
         //Create new stock object and check if exists
-
-        // Create new record if doesn't
-
-
+        $checkStock = Stock::where('ISBN13','=',$request->ISBN13)->first();
         // Update Qty if exists
-        $user = new User();
-        $user->userID = $request->userID;
-        $user->userName = $request->userName;
-        $user->userEmail = $request->userEmail;
-        $user->userPassword = Hash::make($request->userPassword);
-        $user->userPrivilige = $request->privilige;
-        $user->country = "";
-        $user->state = "";
-        $user->district = "";
-        $user->postcode = 0;
-        $user->address = "";
-        $res = $user->save();
+        if($checkStock){
+            $checkStock->ISBN13 = $request->ISBN13;
+            $checkStock->bookName = $request->bookName;
+            $checkStock->bookDescription = $request->bookDesc;
+            $checkStock->bookAuthor = $request->bookAuthor;
+            $checkStock->publicationDate = $request->publicationDate;
+            $checkStock->tradePrice = $request->tradePrice;
+            $checkStock->retailPrice = $request->retailPrice;
+            $checkStock->qty = $checkStock->qty + $request->qty;
+            $checkStock->coverImg = ""; // To DO img
+            
+            $res = $checkStock->save();
+        // Create new record if doesn't
+        }else {
+            $stock = new Stock();
+            $stock->ISBN13 = $request->ISBN13;
+            $stock->bookName = $request->bookName;
+            $stock->bookDescription = $request->bookDesc;
+            $stock->bookAuthor = $request->bookAuthor;
+            $stock->publicationDate = $request->publicationDate;
+            $stock->tradePrice = $request->tradePrice;
+            $stock->retailPrice = $request->retailPrice;
+            $stock->qty = $request->qty;
+            $stock->coverImg = ""; // To DO img
+ 
+            $res = $stock->save();
+        } 
 
         if($res){
-            return back() ->with('success','You have registered successfully');
+            return redirect('stocks')->with('success', 'Stock has been updated Succesfully!');
         }
 
         else{
-            return back()->with('fail', 'Something Wrong');
+            return redirect('addStocks')->with('fail','Fail to Update Stock');
         }
+        
+        
     }
 }

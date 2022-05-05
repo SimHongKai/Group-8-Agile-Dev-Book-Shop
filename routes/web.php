@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
+use App\Http\Controllers\StockController;
 
 
 /*
@@ -29,5 +30,5 @@ Route::get('/home',[CustomAuthController::class,'home']);
 //Route for stocks
 Route::post('/add-stock',[StockController::class,'addStock'])->name('add-stock');
 
-// General Route for moving to new pages
+// General Route for moving to new pages (dev and testing only, need comment out)
 Route::get('/{new_page}',[CustomAuthController::class,'new_page']);    

@@ -12,14 +12,21 @@
     </head>
 
     <body>
-        @include('header');
+        @include('header')
         <div class = "container">
             <div id='content'>
                 <h1><font face='Impact'>Stock Levels</font></h1>
                 <div id = 'stock_buttons'>
                     <a href="<?php echo url('addStocks') ?>">Add Stocks</a>
                 </div>
-
+                <!-- Print message that stock was updated -->
+                @if(Session::has('success'))
+                <div class="alert alert-success">{{Session::get('success')}}</div>
+                @endif
+                @if(Session::has('fail'))
+                <div class="alert alert-danger">{{Session::get('fail')}}</div>
+                @endif
+                @csrf
                 <div class="mt-8 bg-white dark:bg-gray-800 overflow-hidden shadow sm:rounded-lg">
                     <!-- table here -->
                     <table class = 'stockTable'>
@@ -37,7 +44,7 @@
                         </tbody>
                     </table>
                 </div>
-                @include('footer');
+                @include('footer')
             </div>
         </div>
 

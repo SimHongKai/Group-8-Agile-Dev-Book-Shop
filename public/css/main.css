@@ -150,8 +150,16 @@ body {
    text-align: center;
 }
 
+#add-stock-container {
+   display: block; 
+   height:auto;
+   position: relative; 
+   width: 80%;
+   align-self: center;
+ }
+
 #add-stock-content {
-   width:1300px;
+   width:80%;
     height:auto;
     background-color: white;
     padding-left:10px;
@@ -164,4 +172,6 @@ body {
    background-color: white;
    padding:50px;
    margin:0% auto 0;
+   font: 14px Arial, Helvetica, sans-serif, bold;
+   font-weight: bold;
 }
