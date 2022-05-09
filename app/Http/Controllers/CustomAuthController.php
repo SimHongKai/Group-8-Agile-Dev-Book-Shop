@@ -67,7 +67,7 @@ class CustomAuthController extends Controller
         //Compare to database
         $user = User::where('userID','=',$request->userID)->first();
         if($user){
-            if(Hash::check($request->userPassword == $user->userPassword)){
+            if(Hash::check($request->userPassword, $user->userPassword)){
                 $request->session() -> put('loginId',$user->userID);
                 return redirect('home');
             }
