@@ -9,6 +9,8 @@ use Session;
 
 class CustomAuthController extends Controller
 {
+    
+
     //Function to go sign in page
     public function login(){
         return view ("auth.login");
@@ -24,15 +26,13 @@ class CustomAuthController extends Controller
     {
         //validate before storing to database
         $request->validate([
-            'userID'=>'required|unique:users',
-            'userName'=>'required|regex:/^[a-zA-Z]+$/u',
-            'userEmail' => 'required|email',
-            'userPassword' => 'required|min:8|max:12|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
-            'privilige'=>'required|gt:0|lt:3'
+            'userName'=>'required|min:0|max:255|',
+            'userEmail' => 'required|email|unique:users|min:0|max:255|',
+            'userPassword' => 'required|min:8|max:255|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
+            'privilige'=>'required|regex:/[0-9]/|gt:0|lt:3'
         ]);
         //Create new object and store to database
         $user = new User();
-        $user->userID = $request->userID;
         $user->userName = $request->userName;
         $user->userEmail = $request->userEmail;
         $user->userPassword = Hash::make($request->userPassword);
@@ -43,7 +43,7 @@ class CustomAuthController extends Controller
         $user->postcode = 0;
         $user->address = "";
         $res = $user->save();
-
+        
         if($res){
             return back() ->with('success','You have registered successfully');
         }
@@ -59,14 +59,14 @@ class CustomAuthController extends Controller
     {
         //validate before compare to database
         $request->validate([
-            'userID'=>'required',
-            'userPassword' => 'required|min:8|max:12',
+            'userEmail'=>'required|email|min:0|max:255|',
+            'userPassword' => 'required|min:8|max:255|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
         ]);
         //Compare to database
-        $user = User::where('userID','=',$request->userID)->first();
+        $user = User::where('userEmail','=',$request->userEmail)->first();
         if($user){
             if(Hash::check($request->userPassword, $user->userPassword)){
-                $request->session() -> put('loginId',$user->userID);
+                $request->session() -> put('loginEmail',$user->userEmail);
                 return redirect('home');
             }
             else{
@@ -74,7 +74,7 @@ class CustomAuthController extends Controller
             }
         }
         else{
-            return back()->with('fail','This User ID is not registered');
+            return back()->with('fail','This User Email is not registered');
         }
     }
 
@@ -82,16 +82,25 @@ class CustomAuthController extends Controller
     public function home(){
         $data = array ();
 
-        if (Session::has('loginId')){
-            $data = User::where('userID', '=', Session::get('loginId'))->first(); 
+        if (Session::has('loginEmail')){
+            $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
         }
         return view ('home', compact('data'));
     }
 
+    public function new_page($view){
+        $data = array ();
+        
+        if (Session::has('loginEmail')){
+            $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
+        }
+        return view ($view, compact('data'));
+    }
+
     //Function after press log out button
     public function logout(){
-        if(Session::has('loginId')){
-            Session::pull('loginId');
+        if(Session::has('loginEmail')){
+            Session::pull('loginEmail');
             return redirect('login');
         }
     }

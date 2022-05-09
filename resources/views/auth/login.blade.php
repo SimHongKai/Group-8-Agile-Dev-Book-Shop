@@ -10,9 +10,7 @@
 </head>
 
 <body>
-    <?php
-        include ('C:\xampp\htdocs\Book_Shop\resources\views\header.blade.php');
-    ?>
+    @include('header')
     <div class="container">
         <div id='signInContent'>
             <div id='sign-in-up-form'>
@@ -27,9 +25,9 @@
                     @endif
                     @csrf
                     <div class="form-group">
-                        <label for="id">User ID</label>
-                        <input type="text" class="form-control" placeholder="Enter User ID" name="userID" value="{{old('userID')}}">
-                        <span class="text-danger">@error('userID') {{$message}} @enderror</span>
+                        <label for="id">User Email</label>
+                        <input type="text" class="form-control" placeholder="Enter Email" name="userEmail" value="{{old('userEmail')}}">
+                        <span class="text-danger">@error('userEmail') {{$message}} @enderror</span>
                     </div>
                     <br>
                     <br>
@@ -49,9 +47,7 @@
                     <a href ="registration">Sign Up</a>
                 </form> 
             </div>
-            <?php
-            include ('C:\xampp\htdocs\Book_Shop\resources\views\footer.blade.php');
-            ?>
+            @include('footer')
         </div>
     </div>
     

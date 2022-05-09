@@ -10,9 +10,7 @@
 </head>
 
 <body>
-    <?php
-        include ('C:\xampp\htdocs\Book_Shop\resources\views\header.blade.php');
-    ?>
+    @include('header')
     <div class="container">
         <div id='signUpContent'>
             <div id='sign-in-up-form'>
@@ -27,16 +25,11 @@
                     @endif
 
                     @csrf
-                    <div class="form-group">
-                        <label for="id">User ID</label>
-                        <input type="text" class="form-control" placeholder="Enter User ID" name="userID" value="{{old('userID')}}">
-                        <span class="text-danger">@error('userID') {{$message}} @enderror</span>
-                    </div>
                     <br>
                     <br>
                     <div class="form-group">
                         <label for="name">User Name</label>
-                        <input type="text" class="form-control" placeholder="Enter Full Name" name="userName" value="{{old('userName')}}">
+                        <input type="text" class="form-control" placeholder="Enter Username" name="userName" value="{{old('userName')}}">
                         <span class="text-danger">@error('userName') {{$message}} @enderror</span>
                     </div>
                     <br>
@@ -57,7 +50,7 @@
                     <br>
                     <div class="form-group">
                         <label for="privilige">Privilige</label>
-                        <input type="text" class="form-control" placeholder="1 - User, 2 - Admin" name="privilige" value="{{old('privilige')}}">
+                        <input type="text" class="form-control" placeholder="1 - User | 2 - Admin" name="privilige" value="{{old('privilige')}}">
                         <span class="text-danger">@error('privilige') {{$message}} @enderror</span>
                     </div>
                     <br>
@@ -72,9 +65,7 @@
                     <a href ="login">Sign In</a>
                 </form>
             </div>
-            <?php
-            include ('C:\xampp\htdocs\Book_Shop\resources\views\footer.blade.php');
-            ?>
+            @include('footer')
         </div>
     </div>
 </body>

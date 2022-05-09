@@ -131,3 +131,47 @@ body {
     text-transform: uppercase;
     font-size: 100%;
 }
+
+/*Display Stock Tables*/
+#stockTable{
+   background-color: white;
+   shape-margin: round;
+   box-shadow: -5px 5px 10px 5px gray;
+   border-radius: 20px;
+   border: #AAA;
+   width: 100%;
+   padding: 8px;
+}
+
+#stockTableHeader {
+   background-color: lightgreen;
+   color: white;
+   padding: 8px;
+   text-align: center;
+}
+
+#add-stock-container {
+   display: block; 
+   height:auto;
+   position: relative; 
+   width: 80%;
+   align-self: center;
+ }
+
+#add-stock-content {
+   width:80%;
+    height:auto;
+    background-color: white;
+    padding-left:10px;
+    padding-right:10px;
+    padding-bottom:5px;
+}
+
+#add-stock-form {
+   width:50%;
+   background-color: white;
+   padding:50px;
+   margin:0% auto 0;
+   font: 14px Arial, Helvetica, sans-serif, bold;
+   font-weight: bold;
+}

@@ -34,7 +34,7 @@
         ?>
                     <p1></p1>
                     <a href="<?php echo url('home') ?>">Home</a>
-                    <a href="<?php echo url('home') ?>">Stock Level</a>
+                    <a href="<?php echo url('stocks') ?>">Stock Level</a>
                     <p1></p1>
                     <p1></p1>
                     <p1></p1>

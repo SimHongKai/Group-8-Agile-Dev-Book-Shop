@@ -10,16 +10,12 @@
 </head>
 
 <body>
-    <?php
-        include ('C:\xampp\htdocs\Book_Shop\resources\views\header.blade.php');
-    ?>
+    @include('header')
     <div class="container">
         <div id='content'>
-        <h1><font face='Impact'>HOME PAGE</font></h1>
+            <h1><font face='Impact'>HOME PAGE</font></h1>
         
-            <?php
-            include ('C:\xampp\htdocs\Book_Shop\resources\views\footer.blade.php');
-            ?>
+            @include('footer')
         </div>
     </div>
     
