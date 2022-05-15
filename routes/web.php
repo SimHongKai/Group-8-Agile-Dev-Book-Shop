@@ -17,7 +17,7 @@ use App\Http\Controllers\StockController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('home');
 });
 
 //Linked with CustomAuthController, will redirect to the page pressed
@@ -29,6 +29,7 @@ Route::get('/logout',[CustomAuthController::class,'logout']);
 Route::get('/home',[CustomAuthController::class,'home']);
 //Route for stocks
 Route::post('/add-stock',[StockController::class,'addStock'])->name('add-stock');
+Route::post('/edit-stock',[StockController::class,'editStock'])->name('edit-stock');
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);
 

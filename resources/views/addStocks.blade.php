@@ -16,7 +16,7 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Add Stocks Form</font></h1>
-                <form action="{{route('add-stock')}}" method="post">
+                <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
                     <!-- Print error message that stock was NOT updated -->
                     @if(Session::has('success'))
                     <div class="alert alert-success">{{Session::get('success')}}</div>
@@ -99,6 +99,9 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <img style="visibility:hidden" id="preview" src="" width=30% height=30%/>
+                    </div>
+                    <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Add Stock</button>
                     </div>
                     <br>
@@ -117,48 +120,58 @@
     </script>
     <script>
   
-  // onkeyup event will occur when the user 
-  // release the key and calls the function
-  // assigned to this event
-  function getExistingStock(str) {
-    if (str.length == 0) {
-        return;
-    }
-    else {
-        // Creates a new XMLHttpRequest object
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            // Defines a function to be called when
-            // the readyState property changes
-            if (this.readyState == 4 && this.status == 200) {
+    // onkeyup event will occur when the user 
+    // release the key and calls the function
+    // assigned to this event
+    function getExistingStock(str) {
+        if (str.length == 0) {
+            return;
+        }
+        else {
+            // Creates a new XMLHttpRequest object
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                // Defines a function to be called when
+                // the readyState property changes
+                if (this.readyState == 4 && this.status == 200) {
                     
-                    // parse the returned JSON
-                    if (this.responseText == null){
-                        return;
-                    }else{
-                        var stock = JSON.parse(this.responseText);
-                    }
-                    //fill in form data
-                    document.getElementById("bookName").value = stock.bookName;
-                    document.getElementById("bookDesc").value = stock.bookDescription;
-                    document.getElementById("bookAuthor").value = stock.bookAuthor;
-                    document.getElementById("publicationDate").value = stock.publicationDate;
-                    document.getElementById("tradePrice").value = stock.tradePrice;
-                    document.getElementById("retailPrice").value = stock.retailPrice;
-                    document.getElementById("qty").value = stock.qty;
-            }
-        };
-        // open xml http request
-        xmlhttp.open("POST", "addStocks/get-stock", true);
-        var data = '_token={{csrf_token()}}&ISBN13=' + str;
-        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        // xhttp.open("GET", "filename", true);
+                        // parse the returned JSON
+                        if (this.responseText == null){
+                            return;
+                        }else{
+                            var stock = JSON.parse(this.responseText);
+                        }
+                        //fill in form data
+                        document.getElementById("bookName").value = stock.bookName;
+                        document.getElementById("bookDesc").value = stock.bookDescription;
+                        document.getElementById("bookAuthor").value = stock.bookAuthor;
+                        document.getElementById("publicationDate").value = stock.publicationDate;
+                        document.getElementById("tradePrice").value = stock.tradePrice;
+                        document.getElementById("retailPrice").value = stock.retailPrice;
+                        document.getElementById("qty").value = stock.qty;
+                }
+            };
+            // open xml http request
+            xmlhttp.open("POST", "addStocks/get-stock", true);
+            var data = '_token={{csrf_token()}}&ISBN13=' + str;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            // xhttp.open("GET", "filename", true);
             
-        // Sends the request to the server
-        xmlhttp.send(data);
+            // Sends the request to the server
+            xmlhttp.send(data);
+        }
     }
-  }
-</script>
+    </script>
+    <script>
+        coverImg.onchange = evt => {
+        const [file] = coverImg.files
+        if (file) {
+        preview.style.visibility = 'visible';
+
+        preview.src = URL.createObjectURL(file)
+        }
+    }
+    </script>
 </body>
 </html>
 

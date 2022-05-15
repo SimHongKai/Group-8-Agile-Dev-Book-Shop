@@ -26,7 +26,10 @@ class StockController extends Controller
      */
     public function addStock(Request $request)
     {
-        
+        //define image file and get original name from encryption
+        $image = $request->file('coverImg');
+        $image_name = $request->ISBN13.'-'.$image->getClientOriginalName();
+
         //validate book info before storing to database
         $request->validate([
             'ISBN13'=>'required|min:13|max:13|regex:/[0-9]/',
@@ -50,8 +53,24 @@ class StockController extends Controller
             $checkStock->tradePrice = $request->tradePrice;
             $checkStock->retailPrice = $request->retailPrice;
             $checkStock->qty = $checkStock->qty + $request->qty;
-            $checkStock->coverImg = ""; // To DO img
-            
+
+            //check current image for pending entry
+            $current_image = Stock::find($request->ISBN13)->coverImg;
+            if($request->coverImg != $current_image) {
+                //delete previous image if image already exists and is not currently in use by another book
+                $prev_path = public_path().'/book_covers/'.$current_image;
+                if (file_exists($prev_path)){
+                    @unlink($prev_path);
+                }
+            }
+            //upload image to public/book_covers if it doesn't already exist
+            $path = public_path().'/book_covers';
+            $image->move($path, $image_name);
+
+            $checkStock->coverImg = $image_name;
+
+            $prev_path = $path;
+
             $res = $checkStock->save();
         // Create new record if doesn't
         }else {
@@ -64,7 +83,11 @@ class StockController extends Controller
             $stock->tradePrice = $request->tradePrice;
             $stock->retailPrice = $request->retailPrice;
             $stock->qty = $request->qty;
-            $stock->coverImg = ""; // To DO img
+            
+            $path = public_path().'/book_covers';
+            $image->move($path, $image_name);
+
+            $stock->coverImg = $image_name;
  
             $res = $stock->save();
         } 
@@ -78,6 +101,10 @@ class StockController extends Controller
         }
         
         
+    }
+
+    public function editStock(Request $request){
+
     }
 
     /**

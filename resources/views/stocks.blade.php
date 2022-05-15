@@ -18,6 +18,7 @@
                 <h1><font face='Impact'>Stock Levels</font></h1>
                 <div id = 'stock_buttons'>
                     <a href="<?php echo url('addStocks') ?>">Add Stocks</a>
+                    <a href="<?php echo url('editStocks') ?>"><br/>Edit Stocks</a>
                 </div>
                 <!-- Print message that stock was updated -->
                 @if(Session::has('success'))
