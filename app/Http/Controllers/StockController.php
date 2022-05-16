@@ -27,9 +27,10 @@ class StockController extends Controller
     public function addStock(Request $request)
     {
         //define image file and get original name from encryption
-        $image = $request->file('coverImg');
-        $image_name = $request->ISBN13.'-'.$image->getClientOriginalName();
-
+        if($request->hasFile('coverImg')) {
+            $image = $request->file('coverImg');
+            $image_name = $request->ISBN13.'-'.$image->getClientOriginalName();
+        }
         //validate book info before storing to database
         $request->validate([
             'ISBN13'=>'required|min:13|max:13|regex:/[0-9]/',
@@ -54,23 +55,23 @@ class StockController extends Controller
             $checkStock->retailPrice = $request->retailPrice;
             $checkStock->qty = $checkStock->qty + $request->qty;
 
-            //check current image for pending entry
-            $current_image = Stock::find($request->ISBN13)->coverImg;
-            if($request->coverImg != $current_image) {
-                //delete previous image if image already exists and is not currently in use by another book
-                $prev_path = public_path().'/book_covers/'.$current_image;
-                if (file_exists($prev_path)){
-                    @unlink($prev_path);
+            //check if coverImg is inputted, if no then no change
+            if ($request->hasFile('coverImg')) {
+                //check current image for pending entry
+                $current_image = Stock::find($request->ISBN13)->coverImg;
+                if($request->coverImg != $current_image) {
+                    //delete previous image if image already exists and is not currently in use by another book
+                    $prev_path = public_path().'/book_covers/'.$current_image;
+                    if (file_exists($prev_path) && $prev_path != public_path().'/book_covers/no_book_cover.jpg'){
+                        @unlink($prev_path);
+                    }
                 }
+                //upload image to public/book_covers if it doesn't already exist
+                $path = public_path().'/book_covers';
+                $image->move($path, $image_name);
+                $checkStock->coverImg = $image_name;
+                $prev_path = $path;
             }
-            //upload image to public/book_covers if it doesn't already exist
-            $path = public_path().'/book_covers';
-            $image->move($path, $image_name);
-
-            $checkStock->coverImg = $image_name;
-
-            $prev_path = $path;
-
             $res = $checkStock->save();
         // Create new record if doesn't
         }else {
@@ -84,10 +85,14 @@ class StockController extends Controller
             $stock->retailPrice = $request->retailPrice;
             $stock->qty = $request->qty;
             
-            $path = public_path().'/book_covers';
-            $image->move($path, $image_name);
-
-            $stock->coverImg = $image_name;
+            if($request->hasFile('coverImg')) {
+                $path = public_path().'/book_covers';
+                $image->move($path, $image_name);
+                $stock->coverImg = $image_name;
+            }
+            else {
+                $stock->coverImg = 'no_book_cover.jpg';
+            }
  
             $res = $stock->save();
         } 
