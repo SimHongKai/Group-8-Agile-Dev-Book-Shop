@@ -108,6 +108,11 @@ class StockController extends Controller
         
     }
 
+    /** 
+     * Edit Stock Details Except Stock ISBN13 And Quantity
+     * @param \App\Models\Stock $stock
+     * @return \Illuminate\Http\Response
+     */
     public function editStock(Request $request)
     {
         //define image file and get original name from encryption
@@ -127,7 +132,7 @@ class StockController extends Controller
         ]);
         //Create new stock object and check if exists
         $checkStock = Stock::where('ISBN13','=',$request->ISBN13)->first();
-        // Update Qty if exists
+        // Update Stock Details If Exist
         if($checkStock){
             $checkStock->bookName = $request->bookName;
             $checkStock->bookDescription = $request->bookDesc;
