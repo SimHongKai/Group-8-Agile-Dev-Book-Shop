@@ -85,7 +85,7 @@
                         <label for="qty" class="col-4 col-form-label">Quantity</label>
                         <div class="col-8">
                         <input id="qty" name="qty" placeholder="Quantity" type="number" 
-                            class="form-control" required="required" value="{{old('qty')}}">
+                            class="form-control" value="{{old('qty')}}" disabled>
                             <span class="text-danger">@error('qty') {{$message}} @enderror</span>
                         </div>  
                     </div>
@@ -152,7 +152,7 @@
                 }
             };
             // open xml http request
-            xmlhttp.open("POST", "addStocks/get-stock", true);
+            xmlhttp.open("POST", "editStocks/get-stock", true);
             var data = '_token={{csrf_token()}}&ISBN13=' + str;
             xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             // xhttp.open("GET", "filename", true);

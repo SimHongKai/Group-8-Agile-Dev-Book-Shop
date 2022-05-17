@@ -32,6 +32,6 @@ Route::post('/add-stock',[StockController::class,'addStock'])->name('add-stock')
 Route::post('/edit-stock',[StockController::class,'editStock'])->name('edit-stock');
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);
-
+Route::post('/editStocks/get-stock', [StockController::class,'getStock']);
 // General Route for moving to new pages (dev and testing only, need comment out)
 Route::get('/{new_page}',[CustomAuthController::class,'new_page']);    

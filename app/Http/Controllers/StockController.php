@@ -108,6 +108,66 @@ class StockController extends Controller
         
     }
 
+    public function editStock(Request $request)
+    {
+        //define image file and get original name from encryption
+        if($request->hasFile('coverImg')) {
+            $image = $request->file('coverImg');
+            $image_name = $request->ISBN13.'-'.$image->getClientOriginalName();
+        }
+        //validate book info before storing to database
+        $request->validate([
+            'ISBN13'=>'required|min:13|max:13|regex:/[0-9]/',
+            'bookName'=>'required',
+            'bookDesc' => 'required',
+            'bookAuthor' => 'required|regex:/[a-z]/|regex:/[A-Z]/',
+            'publicationDate'=>'required|date_format:Y-m-d|before_or_equal:today',
+            'retailPrice'=>'required|numeric|min:20|max:100',
+            'tradePrice'=>'required|numeric|min:20|max:100',
+        ]);
+        //Create new stock object and check if exists
+        $checkStock = Stock::where('ISBN13','=',$request->ISBN13)->first();
+        // Update Qty if exists
+        if($checkStock){
+            $checkStock->bookName = $request->bookName;
+            $checkStock->bookDescription = $request->bookDesc;
+            $checkStock->bookAuthor = $request->bookAuthor;
+            $checkStock->publicationDate = $request->publicationDate;
+            $checkStock->tradePrice = $request->tradePrice;
+            $checkStock->retailPrice = $request->retailPrice;
+
+            //check if coverImg is inputted, if no then no change
+            if ($request->hasFile('coverImg')) {
+                //check current image for pending entry
+                $current_image = Stock::find($request->ISBN13)->coverImg;
+                if($request->coverImg != $current_image) {
+                    //delete previous image if image already exists and is not currently in use by another book
+                    $prev_path = public_path().'/book_covers/'.$current_image;
+                    if (file_exists($prev_path) && $prev_path != public_path().'/book_covers/no_book_cover.jpg'){
+                        @unlink($prev_path);
+                    }
+                }
+                //upload image to public/book_covers if it doesn't already exist
+                $path = public_path().'/book_covers';
+                $image->move($path, $image_name);
+                $checkStock->coverImg = $image_name;
+                $prev_path = $path;
+            }
+            $res = $checkStock->save();
+        // Return Book Not Found Message If Doesn't
+        }else {
+            return redirect('editStocks')->with('fail','Book does not exist!');
+        } 
+
+        if($res){
+            return redirect('stocks')->with('success', 'Stock has been updated Succesfully!');
+        }
+
+        else{
+            return redirect('editStocks')->with('fail','Unable to Edit Book Details!');
+        }
+    }
+
     /**
      * Gets the Specified Stock
      *
