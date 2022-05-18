@@ -15,25 +15,23 @@
         <div id='content'>
             <h1><font face='Impact'>HOME PAGE</font></h1>
 
-            
-    
-        @foreach ($stocks as $stock)
         <div class="container">
-            <div class="col-card" style="width: 18rem">
-                <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/>
-                <h5>{{ $stock->bookName }}</h5><br><br>
-                <div id="home-button">
-                <a href="#" class="btn btn-info">Add to Cart</a>
+            <div class="card2">
+                <ul>
+                    @foreach ($stocks as $stock) 
+                        <li>
+                                <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/><br>
+                                <h5>{{ $stock->bookName }}</h5><br>
+                                <div id="home-button">
+                                <a href="#" class="btn btn-info">Add to Cart</a>
+                                </div>
+                        </li>
+                    @endforeach
+                </ul>
                 </div>
             </div>
         </div>
-        @endforeach    
-</div>
-    
-        </div>
-    </div>
-    
-    
+    <div>
     @include('footer')
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>

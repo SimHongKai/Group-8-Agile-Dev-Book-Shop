@@ -31,16 +31,16 @@
                 @endif
                 @csrf
                 @foreach ($stocks as $stock)
-                <div class="card">
+                <div class="cardStock">
                     <div class="row">
                         <div class="innerLeft">
-                            <img class="card-img-left" src="{{ asset('book_covers')}}/{{$stock->coverImg }}" width="150" height="200"/>
+                            <img class="card-img-left" src="{{ asset('book_covers')}}/{{$stock->coverImg }}" height="200" width="150"/>
                         </div>
                     <div class="innerRight">
                         <div class="horizontal-card-footer"><br>
-                        <span class="card-text">Book Title: {{ $stock->bookName }}</span><br><br><br>
-                        <span class="card-text">ISBN-13 Number: {{ $stock->ISBN13}}</span><br><br><br>
-                        <span class="card-text">Quantity: {{ $stock->qty }}</span>
+                        <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span><br><br><br>
+                        <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br><br>
+                        <span class="card-text-stock">Quantity: {{ $stock->qty }}</span>
                     </div>
                 </div>
             </div>

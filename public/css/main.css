@@ -223,7 +223,7 @@ body {
 }
 
 .cardStock {
-   display:block;
+   display:inline-block;
    width:100%;
    max-width:850px;
    margin-top: 20px;
@@ -286,4 +286,28 @@ body {
    float:right;
 }
 
+.card2 ul {
+   display: flex;
+   flex-wrap: wrap;
+   padding-left: 0;
+}
 
+.card2 ul li {
+   list-style: none;
+   flex:0 0 33.3333333%;
+   width:18rem;
+   margin: 0;
+   padding: 0;
+   margin-top:20px;
+   margin-bottom:20px;
+}
+
+.card2 img {
+   width: 150px;
+   height: 200px;
+   object-fit: cover;
+   margin-top: 7px;
+   margin-bottom: 7px;
+   display: block;
+   box-shadow: 4px 4px 4px 4px lightslategray;
+}
