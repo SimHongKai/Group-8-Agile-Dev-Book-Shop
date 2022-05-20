@@ -14,7 +14,7 @@
     <div class="container">
         <div id='content'>
             <h1><font face='Impact'>HOME PAGE</font></h1>
-
+            
         <div class="container">
             <div class="card2">
                 <ul>
@@ -22,6 +22,7 @@
                         <li>
                                 <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/><br>
                                 <h5>{{ $stock->bookName }}</h5><br>
+                                <h5>Price: {{ $stock->retailPrice }}</h4><br>
                                 <div id="home-button">
                                 <a href="#" class="btn btn-info">Add to Cart</a>
                                 </div>

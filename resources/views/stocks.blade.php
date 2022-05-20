@@ -21,7 +21,30 @@
                 <div id = 'stock_buttons'>
                     <a href="<?php echo url('addStocks') ?>" class="btn btn-info">Add Stocks</a>
                     <a href="<?php echo url('editStocks') ?>" class="btn btn-info">Edit Stocks</a>
-                </div>
+                </div><br>
+
+                <form method="post" action="{{route('stock-filtering')}}" enctype="multipart/form-data">
+                @csrf
+                     <div class="form-group row">
+                        <label for="bookName" class="col-sm-1 col-form-label">Book Title:</label>
+                        <div class="col-sm-9">
+                        <input name="bookName" type="text" class="form-control" id="bookName" placeholder="Book Title">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="qty" class="col-sm-1 col-form-label">Quantity:</label>
+                        <div class="col-sm-9">
+                            <input name="qty" type="number" class="form-control" id="qty"
+                                placeholder="Quantity">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="offset-sm-3 col-sm-6">
+                        <button class="btn btn-block btn-primary" type="submit">Filter</button>
+                        </div>
+                    </div>
+                </form>
+                
                 <!-- Print message that stock was updated -->
                 @if(Session::has('success'))
                 <div class="alert alert-success">{{Session::get('success')}}</div>
@@ -31,20 +54,21 @@
                 @endif
                 @csrf
                 @foreach ($stocks as $stock)
-                <div class="cardStock">
+                <div id="cardStock" class="cardStock">
                     <div class="row">
                         <div class="innerLeft">
                             <img class="card-img-left" src="{{ asset('book_covers')}}/{{$stock->coverImg }}" height="200" width="150"/>
                         </div>
-                    <div class="innerRight">
-                        <div class="horizontal-card-footer"><br>
-                        <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span><br><br><br>
-                        <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br><br>
-                        <span class="card-text-stock">Quantity: {{ $stock->qty }}</span>
+                         <div class="innerRight">
+                            <div class="horizontal-card-footer"><br>
+                                <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span><br><br>
+                                <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br>
+                                <span class="card-text-stock">Quantity: {{ $stock->qty }}</span><br><br>
+                                <span class="card-text-stock">Price: {{ $stock->retailPrice }}</span>
+                            </div>
+                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
                 @endforeach
                 @include('footer') 
             </div>
@@ -52,5 +76,8 @@
     </body>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
 </html>
 
+    
+    
