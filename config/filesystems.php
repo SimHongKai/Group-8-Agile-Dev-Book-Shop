@@ -42,6 +42,11 @@ return [
             'visibility' => 'public',
         ],
 
+        'book_covers' => [
+            'driver' => 'local',
+            'root' => public_path(). '/book_covers',
+        ],
+
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

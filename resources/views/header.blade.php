@@ -11,8 +11,8 @@
     <div id='menu'>
         <?php
             //User logged in
-            if (!empty($data)) {
-                $value = $data->userPrivilige;
+            if (Session::has('userPrivilige')) {
+                $value = Session::get('userPrivilige');
                 // User Log In
                 if($value==1){ 
         ?>

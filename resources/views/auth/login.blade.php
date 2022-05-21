@@ -25,9 +25,9 @@
                     @endif
                     @csrf
                     <div class="form-group">
-                        <label for="id">User ID</label>
-                        <input type="text" class="form-control" placeholder="Enter User ID" name="userID" value="{{old('userID')}}">
-                        <span class="text-danger">@error('userID') {{$message}} @enderror</span>
+                        <label for="id">User Email</label>
+                        <input type="text" class="form-control" placeholder="Enter Email" name="userEmail" value="{{old('userEmail')}}">
+                        <span class="text-danger">@error('userEmail') {{$message}} @enderror</span>
                     </div>
                     <br>
                     <br>
