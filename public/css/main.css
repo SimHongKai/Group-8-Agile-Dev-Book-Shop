@@ -229,6 +229,16 @@ body {
    margin-top: 20px;
    margin-bottom: 20px;
 }
+
+.card-stock-details{
+   display:inline-block;
+   background-color: rgb(247, 240, 199);
+   width:100%;
+   max-width:1000px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
 .innerLeft {
    display:inline-block;
    margin-right:-4px;
@@ -243,10 +253,25 @@ body {
    text-align:left;
    padding:10px;
 }
-.card-text-stock {
-   display:inline-block;
+
+.card-text-stock{
+   display: inline-block;
    font-size: 22px;
    font-weight: bold;
+}
+
+.card-text-details{
+   color: #4c4a37; 
+   font-family: 'Source Sans Pro', sans-serif; 
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-title-stock {
+   color: #7c795d; 
+   font-family: 'Trocchi', serif; 
+   font-size: 26px; 
+   font-weight: bolder; 
 }
 
 #rangeBox{
@@ -310,6 +335,12 @@ body {
    margin-bottom: 7px;
    display: block;
    box-shadow: 4px 4px 4px 4px lightslategray;
+}
+
+img.stock-details {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
 }
 
 

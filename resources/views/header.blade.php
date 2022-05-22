@@ -1,6 +1,6 @@
 <meta charset=utf-8>
 <head>
-<link rel="stylesheet" type="text/css" href="css/main.css">
+<link rel="stylesheet" type="text/css" href="{{ asset('css/main.css') }}">
 </head>
 
 <body>
@@ -11,8 +11,8 @@
     <div id='menu'>
         <?php
             //User logged in
-            if (!empty($data)) {
-                $value = $data->userPrivilige;
+            if (Session::has('userPrivilige')) {
+                $value = Session::get('userPrivilige');
                 // User Log In
                 if($value==1){ 
         ?>
