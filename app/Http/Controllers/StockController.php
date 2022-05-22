@@ -196,6 +196,15 @@ class StockController extends Controller
             return null;
     }
 
+    public function viewStockDetails(Request $request){
+        if($request!=null){
+            $stock = Stock::find($request->ISBN13);
+            return view('stockDetail')->with('stock', $stock);
+        }else{
+            return view('stocks');
+        }
+    }
+
     public function obtainStock() {
         $stocks = DB::select('select * from stock');
         return view('stocks')->with(compact('stocks'))->with('success', 'Stock has been updated Succesfully!');
