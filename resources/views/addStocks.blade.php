@@ -68,19 +68,25 @@
                     <div class="form-group row">
                         <label for="tradePrice" class="col-4 col-form-label">Trade Price</label>
                         <div class="col-8">
-                        <input id="tradePrice" name="tradePrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('tradePrice')}}">
-                            <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>
-                        </div>  
+                            <input id="tradePrice" name="tradePrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('tradePrice')}}" placeholder="0.00" class="form-control">    
+                            <div id="sliderBox">
+                                <input type="range" id="tradePriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>  
                     </div>
                     <div class="form-group row">
                         <label for="retailPrice" class="col-4 col-form-label">Retail Price</label>
                         <div class="col-8">
-                        <input id="retailPrice" name="retailPrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('retailPrice')}}">
-                            <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
-                        </div> 
-                    </div>
+                        <input id="retailPrice" name="retailPrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('retailPrice')}}" placeholder="0.00" class="form-control">   
+                            <div id="sliderBox">
+                                <input type="range" id="retailPriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
+                    </div>   
                     <div class="form-group row">
                         <label for="qty" class="col-4 col-form-label">Quantity</label>
                         <div class="col-8">
@@ -171,6 +177,40 @@
         preview.src = URL.createObjectURL(file)
         }
     }
+    </script>
+
+    <script>
+        var sliderLeft=document.getElementById("tradePrice");
+        var sliderRight=document.getElementById("retailPrice");
+        var inputMin=document.getElementById("tradePriceSlider");
+        var inputMax=document.getElementById("retailPriceSlider");
+
+    ///value updation from input to slider
+    //function input update to slider
+    function sliderLeftInput(){//input update slider left
+        sliderLeft.value=inputMin.value;
+    }
+
+    function sliderRightInput(){//input update slider right
+        sliderRight.value=(inputMax.value);//chnage in input max updated in slider right
+    }
+
+    //calling function on change of inputs to update in slider
+    inputMin.addEventListener("change",sliderLeftInput);
+    inputMax.addEventListener("change",sliderRightInput);
+
+    ///value updation from slider to input
+    //functions to update from slider to inputs 
+    function inputMinSliderLeft(){//slider update inputs
+        inputMin.value=sliderLeft.value;
+    }
+
+    function inputMaxSliderRight(){//slider update inputs
+        inputMax.value=sliderRight.value;
+    }
+
+    sliderLeft.addEventListener("change",inputMinSliderLeft);
+    sliderRight.addEventListener("change",inputMaxSliderRight);
     </script>
 </body>
 </html>

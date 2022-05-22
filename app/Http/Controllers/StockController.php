@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Stock;
 use Illuminate\Http\Request;
+use DB;
 
 class StockController extends Controller
 {
@@ -189,5 +190,39 @@ class StockController extends Controller
                 return $stock;
             }
             return null;
+    }
+
+    public function obtainStock() {
+        $stocks = DB::select('select * from stock');
+        return view('stocks')->with(compact('stocks'))->with('success', 'Stock has been updated Succesfully!');
+    }
+
+    public function stockFiltering(Request $request) {
+        //validate book info
+        $request->validate([
+            'qty'=>'numeric|min:0'
+        ]);
+
+        $title="";
+        $minQty=0;
+        $maxQty=0;
+
+        $filter=true;
+
+        //if request not empty assign variables
+         if (isset($request->bookName)){
+            $title = $request->bookName;
+        }
+
+        if (isset($request->qty)) {
+            $minQty = $request->qty;
+        }
+        
+        $stocks = DB::table('stock')
+                    /* ->where('bookName','LIKE',$title) */
+                    ->where('qty','>=',$minQty)
+                    ->get();
+
+        return view('stocks')->with(compact('stocks'))->with('success', 'Stock has been updated Succesfully!');
     }
 }

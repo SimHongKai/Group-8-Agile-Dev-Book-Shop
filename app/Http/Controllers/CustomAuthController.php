@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\Stock;
 use Hash;
 use Session;
+use DB;
 
 class CustomAuthController extends Controller
 {
@@ -85,7 +87,11 @@ class CustomAuthController extends Controller
         if (Session::has('loginEmail')){
             $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
         }
-        return view ('home', compact('data'));
+        
+        $stocks = DB::table('stock')
+                        ->where('qty','>',0)
+                        ->get();
+        return view('home')->with(compact('data'))->with(compact('stocks'));
     }
 
     public function new_page($view){
@@ -104,4 +110,6 @@ class CustomAuthController extends Controller
             return redirect('login');
         }
     }
+
+    
 }

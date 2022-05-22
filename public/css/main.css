@@ -221,3 +221,95 @@ body {
     border-radius: 0.25rem;
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
+
+.cardStock {
+   display:inline-block;
+   width:100%;
+   max-width:850px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+.innerLeft {
+   display:inline-block;
+   margin-right:-4px;
+   vertical-align:top;
+   width:30%;
+   text-align:left;
+}
+.innerRight {
+   display:inline-block;
+   vertical-align:top;
+   width:70%;
+   text-align:left;
+   padding:10px;
+}
+.card-text-stock {
+   display:inline-block;
+   font-size: 22px;
+   font-weight: bold;
+}
+
+#rangeBox{
+   width:300px;
+   height:100px;
+}
+#sliderBox{
+   position:relative;
+   top:0%;
+   width:300px;  
+}
+#slider0to50{
+   width:150px;
+   position:absolute;
+   left:0%;
+}
+#slider51to100{
+   width:150px;
+   position:absolute;
+   left:50%;
+}
+#inputRange{
+   position:relative;
+   top:50%;
+}
+#inputRange::after{
+   content:"";
+   clear:both;
+   display:block
+}
+#inputRange #min{
+   width:40%;
+   float:left;
+}   
+#inputRange #max{
+   width:40%;
+   float:right;
+}
+
+.card2 ul {
+   display: flex;
+   flex-wrap: wrap;
+   padding-left: 0;
+}
+
+.card2 ul li {
+   list-style: none;
+   flex:0 0 33.3333333%;
+   width:18rem;
+   margin: 0;
+   padding: 0;
+   margin-top:20px;
+   margin-bottom:20px;
+}
+
+.card2 img {
+   width: 150px;
+   height: 200px;
+   object-fit: cover;
+   margin-top: 7px;
+   margin-bottom: 7px;
+   display: block;
+   box-shadow: 4px 4px 4px 4px lightslategray;
+}
+
+
