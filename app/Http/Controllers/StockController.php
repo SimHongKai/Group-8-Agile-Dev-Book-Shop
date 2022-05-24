@@ -14,8 +14,12 @@ class StockController extends Controller
      * @param  \App\Models\Stock  $stock
      * @return \Illuminate\Http\Response
      */
-    public function allStock(){
+    public function addStocksView(){
+        return view ('addStocks');
+    }
 
+    public function editStocksView(){
+        return view ('editStocks');
     }
 
 
@@ -190,6 +194,15 @@ class StockController extends Controller
                 return $stock;
             }
             return null;
+    }
+
+    public function viewStockDetails(Request $request){
+        if($request!=null){
+            $stock = Stock::find($request->ISBN13);
+            return view('stockDetail')->with('stock', $stock);
+        }else{
+            return view('stocks');
+        }
     }
 
     public function obtainStock() {

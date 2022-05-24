@@ -19,8 +19,8 @@
             <div id='content'>
                 <h1><font face='Impact'>Stock Levels</font></h1>
                 <div id = 'stock_buttons'>
-                    <a href="<?php echo url('addStocks') ?>" class="btn btn-info">Add Stocks</a>
-                    <a href="<?php echo url('editStocks') ?>" class="btn btn-info">Edit Stocks</a>
+                    <a href="<?php echo route('addStocks') ?>" class="btn btn-info">Add Stocks</a>
+                    <a href="<?php echo route('editStocks') ?>" class="btn btn-info">Edit Stocks</a>
                 </div><br>
 
                 <form method="post" action="{{route('stock-filtering')}}" enctype="multipart/form-data">
@@ -61,10 +61,11 @@
                         </div>
                          <div class="innerRight">
                             <div class="horizontal-card-footer"><br>
-                                <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span><br><br>
+                                <a href = "{{ route('stockDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
+                                    <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span></a><br><br>
                                 <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br>
                                 <span class="card-text-stock">Quantity: {{ $stock->qty }}</span><br><br>
-                                <span class="card-text-stock">Price: {{ $stock->retailPrice }}</span>
+                                <span class="card-text-stock">Price: RM{{ $stock->retailPrice }}</span>
                             </div>
                          </div>
                     </div>
