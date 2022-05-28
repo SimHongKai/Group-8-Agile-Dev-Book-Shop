@@ -192,7 +192,7 @@
     }
 
     function sliderRightInput(){//input update slider right
-        sliderRight.value=(inputMax.value);//chnage in input max updated in slider right
+        sliderRight.value=(inputMax.value);//change in input max updated in slider right
     }
 
     //calling function on change of inputs to update in slider

@@ -343,4 +343,10 @@ img.stock-details {
    object-fit: contain;
 }
 
+.book-details{
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+}
+
 

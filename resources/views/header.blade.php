@@ -23,7 +23,7 @@
                 <p1></p1>
                 <p1></p1>
                 <p1></p1>
-                <a href="<?php echo url('home') ?>"  style="text-align:right; padding-top: 8px;"><img src="images/cartIcon.PNG" width="40px" height="40px"></a>
+                <a href="<?php echo url('home') ?>"  style="text-align:right; padding-top: 8px;"><img src="{{ asset('images/cartIcon.png') }}" width="40px" height="40px"></a>
                 <p2>100</p2>
                 <a href="<?php echo url('home') ?>">RM 15.50</a1>
                 <a href ="logout" style="color:yellow">Log Out</a>

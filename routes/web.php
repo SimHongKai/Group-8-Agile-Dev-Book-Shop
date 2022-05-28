@@ -34,6 +34,7 @@ Route::post('/edit-stock',[StockController::class,'editStock'])->name('edit-stoc
 Route::get('/stocks',[StockController::class,'obtainStock']);
 Route::post('/stocks',[StockController::class,'stockFiltering'])->name('stock-filtering');
 Route::get('/stockDetail/{ISBN13}', [StockController::class,'viewStockDetails'])->name('stockDetails');
+Route::get('/bookDetail/{ISBN13}', [StockController::class,'viewBookDetails'])->name('bookDetails');
 
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);
