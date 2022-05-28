@@ -260,8 +260,22 @@ body {
    font-weight: bold;
 }
 
+.card-text-nostock{
+   display: inline-block;
+   color: red;
+   font-size: 22px;
+   font-weight: bold;
+}
+
 .card-text-details{
    color: #4c4a37; 
+   font-family: 'Source Sans Pro', sans-serif; 
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-text-nostock-details{
+   color: red; 
    font-family: 'Source Sans Pro', sans-serif; 
    font-size: 22px;
    font-weight: bold;
