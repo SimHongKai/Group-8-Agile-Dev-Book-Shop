@@ -20,14 +20,16 @@
                 <ul>
                     @foreach ($stocks as $stock) 
                         <li>
-                            <a href="{{route('bookDetails', ['ISBN13' => $stock->ISBN13] )}}">
-                                <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/></a><br>
-                                <a href = "{{ route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
-                                <h5>{{ $stock->bookName }}</h5></a><br>
+                                <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/><br>
+                                <h5>{{ $stock->bookName }}</h5><br>
                                 <h5>Price: RM{{ $stock->retailPrice }}</h4><br>
+                                @if ($stock->qty > 0)
                                 <div id="home-button">
                                 <a href="#" class="btn btn-info">Add to Cart</a>
                                 </div>
+                                @else
+                                <span class="home-text-details" style="background-color: red">OUT OF STOCK</span>
+                                @endif
                         </li>
                     @endforeach
                 </ul>

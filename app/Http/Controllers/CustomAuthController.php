@@ -89,9 +89,7 @@ class CustomAuthController extends Controller
             $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
         }
 
-        $stocks = DB::table('stock')
-                        ->where('qty','>',0)
-                        ->get();
+        $stocks = DB::select('select * from stock');
         return view('home')->with(compact('data'))->with(compact('stocks'));
     }
 

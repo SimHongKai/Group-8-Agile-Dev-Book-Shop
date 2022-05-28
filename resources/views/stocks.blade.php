@@ -62,7 +62,7 @@
                          <div class="innerRight">
                             <div class="horizontal-card-footer"><br>
                                 <a href = "{{ route('stockDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
-                                <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span></a><br><br>
+                                    <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span></a><br><br>
                                 <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br>
                                 <span class="card-text-stock">Quantity: {{ $stock->qty }}</span><br><br>
                                 <span class="card-text-stock">Price: RM{{ $stock->retailPrice }}</span>
