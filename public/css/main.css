@@ -239,6 +239,15 @@ body {
    margin-bottom: 20px;
 }
 
+.card-book-details{
+   display:inline-block;
+   background-color: #fff4a3;
+   width:100%;
+   max-width:1000px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
 .innerLeft {
    display:inline-block;
    margin-right:-4px;
@@ -286,6 +295,23 @@ body {
    font-family: 'Trocchi', serif; 
    font-size: 26px; 
    font-weight: bolder; 
+}
+
+.card-title-product{
+   font-family: 'Enriqueta', arial, serif; 
+   line-height: 1.25; 
+   margin: 0 0 10px; 
+   font-size: 28px; 
+   font-weight: bold;
+}
+
+.card-product-details{
+   color: #333333; 
+   font-family: "Helvetica Neue",Arial,sans-serif; 
+   font-size: 25px; 
+   font-weight: 300; 
+   line-height: 1.5625; 
+   margin-bottom: 25px;
 }
 
 #rangeBox{

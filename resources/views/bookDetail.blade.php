@@ -15,29 +15,27 @@
             <div id='content'>
                 <h1><font face='Impact'>Book Details</font></h1>
                 @csrf
-                <div id="cardStock" class="card-stock-details">
+                <div id="cardStock" class="card-book-details">
                     <div class="row">
                         <div class="innerLeft">
                             <img class="stock-details" src="{{ asset('book_covers')}}/{{$stock->coverImg }}" height="200" width="150"/>
                         </div>
                          <div class="innerRight">
                             <div class="horizontal-card-footer"><br>
-                                <span class="card-title-stock">Book Title:</span>
-                                <span class="card-text-details">{{ $stock->bookName }}</span></a><br><br>
-                                <span class="card-title-stock">ISBN-13 Number:</span> 
-                                <span class="card-text-details">{{ $stock->ISBN13 }}</span><br><br>
-                                <span class="card-title-stock">Author: </span>
-                                <span class="card-text-details">{{$stock->bookAuthor}}</span><br><br>
-                                <span class="card-title-stock">Book Publication Date:</span>
-                                <span class="card-text-details">{{$stock->publicationDate}}</span><br><br>
-                                <span class="card-title-stock">Book Description:</span>
-                                <span class="card-text-details">{{$stock->bookDescription}}</span><br><br>
-                                <span class="card-title-stock">Quantity:</span>
-                                <span class="card-text-details">{{ $stock->qty }}</span><br><br>
-                                <span class="card-title-stock">Trade Price:</span>
-                                <span class="card-text-details">RM{{$stock->tradePrice}}</span><br><br>
-                                <span class="card-title-stock">Retail Price:</span>
-                                <span class="card-text-details">RM{{ $stock->retailPrice }}</span>
+                                <span class="card-title-product">Book Title:</span><br>
+                                <span class="card-product-details">{{ $stock->bookName }}</span></a><br>
+                                <span class="card-title-product">ISBN-13 Number:</span><br> 
+                                <span class="card-product-details">{{ $stock->ISBN13 }}</span><br>
+                                <span class="card-title-product">Author: </span><br>
+                                <span class="card-product-details">{{$stock->bookAuthor}}</span><br>
+                                <span class="card-title-product">Book Publication Date:</span><br>
+                                <span class="card-product-details">{{$stock->publicationDate}}</span><br>
+                                <span class="card-title-product">Book Description:</span><br>
+                                <span class="card-product-details">{{$stock->bookDescription}}</span><br>
+                                <span class="card-title-product">Quantity:</span><br>
+                                <span class="card-product-details">{{ $stock->qty }}</span><br>
+                                <span class="card-title-product">Price:</span><br>
+                                <span class="card-product-details">RM{{ $stock->retailPrice }}</span>
                             </div>
                          </div>
                     </div>
