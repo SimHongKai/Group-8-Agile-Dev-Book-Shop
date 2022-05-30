@@ -23,9 +23,14 @@
                                 <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/><br>
                                 <h5>{{ $stock->bookName }}</h5><br>
                                 <h5>Price: RM{{ $stock->retailPrice }}</h4><br>
-                                @if ($stock->qty > 0)
+                                @if (session()->get('userPrivilige') == 2)
+                                @elseif ($stock->qty > 0)
                                 <div id="home-button">
-                                <a href="#" class="btn btn-info">Add to Cart</a>
+                                <form action="{{route('addCart')}}" method="POST">
+                                    @csrf
+                                    <button name="addButton" value="{{ $stock->retailPrice }}" type="submit" class="btn btn-info">Add to Cart</button>
+                                    <input type="hidden" name="bookISBN" value="{{ $stock->ISBN13 }}" >
+                                </form>
                                 </div>
                                 @else
                                 <span class="home-text-details" style="background-color: red">OUT OF STOCK</span>

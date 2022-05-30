@@ -19,12 +19,16 @@ use App\Http\Controllers\StockController;
 Route::get('/', [CustomAuthController::class,'login']);
 
 //Linked with CustomAuthController, will redirect to the page pressed
-Route::get('/login', [CustomAuthController::class, 'login']);
+Route::get('/login', [CustomAuthController::class, 'login'])->name('LoginUser');
 Route::get('/registration',[CustomAuthController::class, 'registration']);
 Route::post('/register-user',[CustomAuthController::class,'registerUser'])->name('register-user');
 Route::post('/login-user',[CustomAuthController::class,'loginUser'])->name('login-user');
 Route::get('/logout',[CustomAuthController::class,'logout']);
 Route::get('/home',[CustomAuthController::class,'home']);
+
+//Home Controller
+Route::post('/home', [\App\Http\Controllers\HomeController::class,'processCart'])->name('addCart');
+//Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
 //Route for stocks
 Route::get('/addStocks', [StockController::class,'addStocksView'])->name('addStocks');

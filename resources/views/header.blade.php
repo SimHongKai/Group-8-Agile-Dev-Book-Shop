@@ -23,9 +23,14 @@
                 <p1></p1>
                 <p1></p1>
                 <p1></p1>
+                <?php
+                $price = Session::get('priceItem');
+                $itemCount = Session::get('numItem');
+                ?>
                 <a href="<?php echo url('home') ?>"  style="text-align:right; padding-top: 8px;"><img src="{{ asset('images/cartIcon.png') }}" width="40px" height="40px"></a>
-                <p2>100</p2>
-                <a href="<?php echo url('home') ?>">RM 15.50</a1>
+                <p2><?php echo $itemCount?></p2> <!--Item Num!-->
+                <a href="<?php echo url('home') ?>">RM<?php echo $price?></a1> <!--Price!-->
+                
                 <a href ="logout" style="color:yellow">Log Out</a>
         <?php
                 }
