@@ -16,7 +16,7 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Add Stocks Form</font></h1>
-                <form action="{{route('add-stock')}}" method="post">
+                <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
                     <!-- Print error message that stock was NOT updated -->
                     @if(Session::has('success'))
                     <div class="alert alert-success">{{Session::get('success')}}</div>
@@ -68,19 +68,25 @@
                     <div class="form-group row">
                         <label for="tradePrice" class="col-4 col-form-label">Trade Price</label>
                         <div class="col-8">
-                        <input id="tradePrice" name="tradePrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('tradePrice')}}">
-                            <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>
-                        </div>  
+                            <input id="tradePrice" name="tradePrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('tradePrice')}}" placeholder="0.00" class="form-control">    
+                            <div id="sliderBox">
+                                <input type="range" id="tradePriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>  
                     </div>
                     <div class="form-group row">
                         <label for="retailPrice" class="col-4 col-form-label">Retail Price</label>
                         <div class="col-8">
-                        <input id="retailPrice" name="retailPrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('retailPrice')}}">
-                            <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
-                        </div> 
-                    </div>
+                        <input id="retailPrice" name="retailPrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('retailPrice')}}" placeholder="0.00" class="form-control">   
+                            <div id="sliderBox">
+                                <input type="range" id="retailPriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
+                    </div>   
                     <div class="form-group row">
                         <label for="qty" class="col-4 col-form-label">Quantity</label>
                         <div class="col-8">
@@ -97,6 +103,9 @@
                             <input type="file" class="custom-file-input" id="coverImg" name="coverImg" aria-describedby="fileInput">
                             <label class="custom-file-label" for="coverImg">Cover Image</label>
                         </div>
+                    </div>
+                    <div class="form-group">
+                        <img style="visibility:hidden" id="preview" src="" width=30% height=30%/>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Add Stock</button>
@@ -117,48 +126,92 @@
     </script>
     <script>
   
-  // onkeyup event will occur when the user 
-  // release the key and calls the function
-  // assigned to this event
-  function getExistingStock(str) {
-    if (str.length == 0) {
-        return;
-    }
-    else {
-        // Creates a new XMLHttpRequest object
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.onreadystatechange = function () {
-            // Defines a function to be called when
-            // the readyState property changes
-            if (this.readyState == 4 && this.status == 200) {
+    // onkeyup event will occur when the user 
+    // release the key and calls the function
+    // assigned to this event
+    function getExistingStock(str) {
+        if (str.length == 0) {
+            return;
+        }
+        else {
+            // Creates a new XMLHttpRequest object
+            var xmlhttp = new XMLHttpRequest();
+            xmlhttp.onreadystatechange = function () {
+                // Defines a function to be called when
+                // the readyState property changes
+                if (this.readyState == 4 && this.status == 200) {
                     
-                    // parse the returned JSON
-                    if (this.responseText == null){
-                        return;
-                    }else{
-                        var stock = JSON.parse(this.responseText);
-                    }
-                    //fill in form data
-                    document.getElementById("bookName").value = stock.bookName;
-                    document.getElementById("bookDesc").value = stock.bookDescription;
-                    document.getElementById("bookAuthor").value = stock.bookAuthor;
-                    document.getElementById("publicationDate").value = stock.publicationDate;
-                    document.getElementById("tradePrice").value = stock.tradePrice;
-                    document.getElementById("retailPrice").value = stock.retailPrice;
-                    document.getElementById("qty").value = stock.qty;
-            }
-        };
-        // open xml http request
-        xmlhttp.open("POST", "addStocks/get-stock", true);
-        var data = '_token={{csrf_token()}}&ISBN13=' + str;
-        xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-        // xhttp.open("GET", "filename", true);
+                        // parse the returned JSON
+                        if (this.responseText == null){
+                            return;
+                        }else{
+                            var stock = JSON.parse(this.responseText);
+                        }
+                        //fill in form data
+                        document.getElementById("bookName").value = stock.bookName;
+                        document.getElementById("bookDesc").value = stock.bookDescription;
+                        document.getElementById("bookAuthor").value = stock.bookAuthor;
+                        document.getElementById("publicationDate").value = stock.publicationDate;
+                        document.getElementById("tradePrice").value = stock.tradePrice;
+                        document.getElementById("retailPrice").value = stock.retailPrice;
+                        document.getElementById("qty").value = stock.qty;
+                }
+            };
+            // open xml http request
+            xmlhttp.open("POST", "addStocks/get-stock", true);
+            var data = '_token={{csrf_token()}}&ISBN13=' + str;
+            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            // xhttp.open("GET", "filename", true);
             
-        // Sends the request to the server
-        xmlhttp.send(data);
+            // Sends the request to the server
+            xmlhttp.send(data);
+        }
     }
-  }
-</script>
+    </script>
+    <script>
+        coverImg.onchange = evt => {
+        const [file] = coverImg.files
+        if (file) {
+        preview.style.visibility = 'visible';
+
+        preview.src = URL.createObjectURL(file)
+        }
+    }
+    </script>
+
+    <script>
+        var sliderLeft=document.getElementById("tradePrice");
+        var sliderRight=document.getElementById("retailPrice");
+        var inputMin=document.getElementById("tradePriceSlider");
+        var inputMax=document.getElementById("retailPriceSlider");
+
+    ///value updation from input to slider
+    //function input update to slider
+    function sliderLeftInput(){//input update slider left
+        sliderLeft.value=inputMin.value;
+    }
+
+    function sliderRightInput(){//input update slider right
+        sliderRight.value=(inputMax.value);//change in input max updated in slider right
+    }
+
+    //calling function on change of inputs to update in slider
+    inputMin.addEventListener("change",sliderLeftInput);
+    inputMax.addEventListener("change",sliderRightInput);
+
+    ///value updation from slider to input
+    //functions to update from slider to inputs 
+    function inputMinSliderLeft(){//slider update inputs
+        inputMin.value=sliderLeft.value;
+    }
+
+    function inputMaxSliderRight(){//slider update inputs
+        inputMax.value=sliderRight.value;
+    }
+
+    sliderLeft.addEventListener("change",inputMinSliderLeft);
+    sliderRight.addEventListener("change",inputMaxSliderRight);
+    </script>
 </body>
 </html>
 

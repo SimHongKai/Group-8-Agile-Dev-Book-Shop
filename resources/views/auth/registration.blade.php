@@ -42,7 +42,7 @@
                     <br>
                     <br>
                     <div class="form-group">
-                        <label for="password">Password</label>
+                        <label for="password">Password (Upper & Lower Case, Special Character, Number)</label>
                         <input type="password" class="form-control" placeholder="Enter Password" name="userPassword" value="{{old('userPassword')}}">
                         <span class="text-danger">@error('userPassword') {{$message}} @enderror</span>
                     </div>

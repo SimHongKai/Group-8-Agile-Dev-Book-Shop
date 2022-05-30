@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Models\CartItem;
+use App\Models\Stock;
 use Hash;
 use Session;
+use DB;
 
 class CustomAuthController extends Controller
 {
@@ -66,7 +69,27 @@ class CustomAuthController extends Controller
         $user = User::where('userEmail','=',$request->userEmail)->first();
         if($user){
             if(Hash::check($request->userPassword, $user->userPassword)){
-                $request->session() -> put('loginEmail',$user->userEmail);
+                $userID = $user->id;
+                $request->session() -> put('userId', $userID);
+                $request->session() -> put('userPrivilige',$user->userPrivilige);
+                
+                //Update Number of items
+                $userID = $user->id;
+                $itemAmount = CartItem::where('userID',$userID) -> sum('qty');
+                $request->session() -> put('numItem',$itemAmount);
+                
+                //Update Price
+                $sumTotal = DB::table('shopping_cart')
+                ->join('stock','shopping_cart.ISBN13',"=",'stock.ISBN13')
+                ->where('userID',$userID)
+                ->selectRaw('SUM(stock.retailPrice * shopping_cart.qty) as total')
+                ->get();
+                $sumTotal = preg_replace('/[^0-9.]/','',$sumTotal);
+                if($sumTotal==null){
+                    $sumTotal = 0;
+                }
+                $request->session() -> put('priceItem',$sumTotal);
+                
                 return redirect('home');
             }
             else{
@@ -80,28 +103,18 @@ class CustomAuthController extends Controller
 
     //Function after press home button
     public function home(){
-        $data = array ();
-
-        if (Session::has('loginEmail')){
-            $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
-        }
-        return view ('home', compact('data'));
-    }
-
-    public function new_page($view){
-        $data = array ();
-        
-        if (Session::has('loginEmail')){
-            $data = User::where('userEmail', '=', Session::get('loginEmail'))->first(); 
-        }
-        return view ($view, compact('data'));
+        $stocks = DB::select('select * from stock');
+        return view('home')->with(compact('stocks'));
     }
 
     //Function after press log out button
     public function logout(){
-        if(Session::has('loginEmail')){
-            Session::pull('loginEmail');
+        if(Session::has('userId')){
+            Session::pull('userId');
+            Session::pull('userPrivilige');
             return redirect('login');
         }
     }
+
+    
 }
