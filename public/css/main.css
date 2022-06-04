@@ -103,7 +103,7 @@ body {
 
   /*Sign In form*/
  #sign-in-up-form{
-    width:500px;
+    width:580px;
     background-color: white;
     padding:100px;
     margin:0% auto 0;
@@ -229,6 +229,25 @@ body {
    margin-top: 20px;
    margin-bottom: 20px;
 }
+
+.card-stock-details{
+   display:inline-block;
+   background-color: rgb(247, 240, 199);
+   width:100%;
+   max-width:1000px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
+.card-book-details{
+   display:inline-block;
+   background-color: #fff4a3;
+   width:100%;
+   max-width:1000px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
 .innerLeft {
    display:inline-block;
    margin-right:-4px;
@@ -243,10 +262,56 @@ body {
    text-align:left;
    padding:10px;
 }
-.card-text-stock {
-   display:inline-block;
+
+.card-text-stock{
+   display: inline-block;
    font-size: 22px;
    font-weight: bold;
+}
+
+.card-text-nostock{
+   display: inline-block;
+   color: red;
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-text-details{
+   color: #4c4a37; 
+   font-family: 'Source Sans Pro', sans-serif; 
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-text-nostock-details{
+   color: red; 
+   font-family: 'Source Sans Pro', sans-serif; 
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-title-stock {
+   color: #7c795d; 
+   font-family: 'Trocchi', serif; 
+   font-size: 26px; 
+   font-weight: bolder; 
+}
+
+.card-title-product{
+   font-family: 'Enriqueta', arial, serif; 
+   line-height: 1.25; 
+   margin: 0 0 10px; 
+   font-size: 28px; 
+   font-weight: bold;
+}
+
+.card-product-details{
+   color: #333333; 
+   font-family: "Helvetica Neue",Arial,sans-serif; 
+   font-size: 25px; 
+   font-weight: 300; 
+   line-height: 1.5625; 
+   margin-bottom: 25px;
 }
 
 #rangeBox{
@@ -312,4 +377,24 @@ body {
    box-shadow: 4px 4px 4px 4px lightslategray;
 }
 
+.home-text-details {
+   font-size: 20px;
+   color: white;
+   font-weight: bold;
+}
 
+img.stock-details {
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+}
+
+.book-details{
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+}
+
+::placeholder{
+   font-size: small;
+}

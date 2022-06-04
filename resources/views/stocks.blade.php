@@ -64,8 +64,13 @@
                                 <a href = "{{ route('stockDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
                                     <span class="card-text-stock">Book Title: {{ $stock->bookName }}</span></a><br><br>
                                 <span class="card-text-stock">ISBN-13 Number: {{ $stock->ISBN13 }}</span><br><br>
+                                @if ($stock->qty > 0)
                                 <span class="card-text-stock">Quantity: {{ $stock->qty }}</span><br><br>
-                                <span class="card-text-stock">Price: {{ $stock->retailPrice }}</span>
+                                @else
+                                <span class="card-text-stock">Quantity:</span>
+                                <span class="card-text-nostock">{{ $stock->qty }}</span><br><br>
+                                @endif
+                                <span class="card-text-stock">Price: RM{{ $stock->retailPrice }}</span>
                             </div>
                          </div>
                     </div>
