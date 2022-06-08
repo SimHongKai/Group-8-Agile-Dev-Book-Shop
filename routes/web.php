@@ -28,7 +28,8 @@ Route::get('/logout',[CustomAuthController::class,'logout']);
 Route::get('/home',[CustomAuthController::class,'home']);
 
 //Home Controller
-Route::post('/home', [HomeController::class,'processCart'])->name('addCart');
+//Route::post('/home', [HomeController::class,'processCart'])->name('addCart');
+Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('addCart');
 Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 

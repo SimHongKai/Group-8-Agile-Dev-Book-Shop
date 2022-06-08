@@ -16,7 +16,7 @@
     <div class="add-stock-container">
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
-                <h1><font face='Impact'>Test API Form</font></h1>
+                <h1><font face='Impact'>Shipping Address</font></h1>
                 <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
                     <!-- Print error message that stock was NOT updated -->
                     @if(Session::has('success'))
@@ -35,7 +35,7 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-block btn-primary" type="submit">Add Stock</button>
+                        <button class="btn btn-block btn-primary" type="submit">Place Order</button>
                     </div>
                     <br>
                 </form> 
@@ -44,11 +44,57 @@
         </div>
     </div>
 
-
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
     </script>
-    <script type="text/javascript" src="{{ URL::asset('js/shoppingCart.js') }}"></script>
+    <script type="text/javascript">
+        // detect Country API
+        document.body.onload = function() {
+            getAddress()
+        };
+
+        function getAddress(){
+            fetch('shoppingCart/get-user-address', {
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json, text-plain, */*",
+                    "X-Requested-With": "XMLHttpRequest",
+                    'X-CSRF-Token': $('meta[name="csrf_token"]').attr('content')
+                },
+                method: 'post',
+                credentials: "same-origin",})
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (user) {
+                if (user.country){
+                    var Country = document.getElementById('Country');
+                            
+                    Country.value = user.country;
+                    // TODO
+                
+                }else{ // otherwise call API to get user country
+                getCountry();
+                }
+            })
+            .catch(function(error){
+                console.log(error)
+            });    
+        }
+        function getCountry(){
+            fetch('https://api.ipregistry.co/?key=tryout')
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (payload) {
+                document.getElementById("Country").value = payload.location.country.name;
+                console.log(payload);
+            })
+            .catch(function(error){
+                console.log(error)
+            });    
+        } 
+    </script>
 </body>
 </html>

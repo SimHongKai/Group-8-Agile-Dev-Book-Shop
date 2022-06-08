@@ -27,9 +27,10 @@
                 $price = Session::get('priceItem');
                 $itemCount = Session::get('numItem');
                 ?>
-                <a href="<?php echo url('home') ?>"  style="text-align:right; padding-top: 8px;"><img src="{{ asset('images/cartIcon.png') }}" width="40px" height="40px"></a>
-                <p2><?php echo $itemCount?></p2> <!--Item Num!-->
-                <a href="<?php echo url('home') ?>">RM<?php echo $price?></a1> <!--Price!-->
+                <a href="<?php echo url('shoppingCart') ?>"  style="text-align:right; padding-top: 8px;">
+                <img src="{{ asset('images/cartIcon.png') }}" width="40px" height="40px"></a>
+                <p2 id = "cartQty"><?php echo $itemCount?></p2> <!--Item Num!-->
+                <a id = "cartPrice" href="<?php echo url('shoppingCart') ?>">RM<?php echo $price?></a> <!--Price!-->
                 
                 <a href ="logout" style="color:yellow">Log Out</a>
         <?php

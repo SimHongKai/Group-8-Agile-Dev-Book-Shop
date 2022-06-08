@@ -14,13 +14,14 @@ function getAddress(){
         method: 'post',
         credentials: "same-origin",})
     .then(function (response) {
-        return response;
+        return response.json();
     })
     .then(function (user) {
         if (user.country){
             var Country = document.getElementById('Country');
                        
             Country.value = user.country;
+            // TODO
         
         }else{ // otherwise call API to get user country
            getCountry();
@@ -29,6 +30,7 @@ function getAddress(){
     .catch(function(error){
         console.log(error)
     });    
+}
 
     /*var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function () {
@@ -59,7 +61,6 @@ function getAddress(){
     xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     // Sends the request to the server
     xmlhttp.send(data);*/
-}
 
 function getCountry(){
     fetch('https://api.ipregistry.co/?key=tryout')
