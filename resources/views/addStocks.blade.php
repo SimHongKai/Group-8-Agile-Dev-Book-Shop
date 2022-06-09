@@ -68,19 +68,25 @@
                     <div class="form-group row">
                         <label for="tradePrice" class="col-4 col-form-label">Trade Price</label>
                         <div class="col-8">
-                        <input id="tradePrice" name="tradePrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('tradePrice')}}">
-                            <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>
-                        </div>  
+                            <input id="tradePrice" name="tradePrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('tradePrice')}}" placeholder="0.00" class="form-control">    
+                            <div id="sliderBox">
+                                <input type="range" id="tradePriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>  
                     </div>
                     <div class="form-group row">
                         <label for="retailPrice" class="col-4 col-form-label">Retail Price</label>
                         <div class="col-8">
-                        <input id="retailPrice" name="retailPrice" placeholder="0.00" type="number" 
-                            class="form-control" step="0.01" required="required" min="20" max="100" value="{{old('retailPrice')}}">
-                            <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
-                        </div> 
-                    </div>
+                        <input id="retailPrice" name="retailPrice" type="number" step="0.01" required="required" min="20" max="100"
+                            value="{{old('retailPrice')}}" placeholder="0.00" class="form-control">   
+                            <div id="sliderBox">
+                                <input type="range" id="retailPriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
+                            </div>
+                        </div>
+                        <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
+                    </div>   
                     <div class="form-group row">
                         <label for="qty" class="col-4 col-form-label">Quantity</label>
                         <div class="col-8">
@@ -118,28 +124,43 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
+    <script type="text/javascript" src="{{ URL::asset('js/addStock.js') }}">
+    </script>
     <script>
-  
-    // onkeyup event will occur when the user 
-    // release the key and calls the function
-    // assigned to this event
-    function getExistingStock(str) {
-        if (str.length == 0) {
-            return;
-        }
-        else {
-            // Creates a new XMLHttpRequest object
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                // Defines a function to be called when
-                // the readyState property changes
-                if (this.readyState == 4 && this.status == 200) {
-                    
+        function getExistingStock(str) {
+            if (str.length == 0) {
+                return;
+            }
+            else {
+                // Creates a new XMLHttpRequest object
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    // Defines a function to be called when
+                    // the readyState property changes
+                    if (this.readyState == 4 && this.status == 200) {
+                        document.getElementById("bookName").removeAttribute('disabled');
+                        document.getElementById("bookDesc").removeAttribute('disabled');
+                        document.getElementById("bookAuthor").removeAttribute('disabled');
+                        document.getElementById("publicationDate").removeAttribute('disabled');
+                        document.getElementById("tradePrice").removeAttribute('disabled');
+                        document.getElementById("retailPrice").removeAttribute('disabled');
+                        document.getElementById("qty").removeAttribute('disabled');
+                        document.getElementById("tradePriceSlider").removeAttribute('disabled');
+                        document.getElementById("retailPriceSlider").removeAttribute('disabled');
                         // parse the returned JSON
                         if (this.responseText == null){
                             return;
                         }else{
                             var stock = JSON.parse(this.responseText);
+                            document.getElementById("bookName").setAttribute('disabled', true);
+                            document.getElementById("bookDesc").setAttribute('disabled', true);
+                            document.getElementById("bookAuthor").setAttribute('disabled', true);
+                            document.getElementById("publicationDate").setAttribute('disabled', true);
+                            document.getElementById("tradePrice").setAttribute('disabled', true);
+                            document.getElementById("retailPrice").setAttribute('disabled', true);
+                            document.getElementById("qty").setAttribute('disabled', true);
+                            document.getElementById("tradePriceSlider").setAttribute('disabled', true);
+                            document.getElementById("retailPriceSlider").setAttribute('disabled', true);
                         }
                         //fill in form data
                         document.getElementById("bookName").value = stock.bookName;
@@ -149,28 +170,17 @@
                         document.getElementById("tradePrice").value = stock.tradePrice;
                         document.getElementById("retailPrice").value = stock.retailPrice;
                         document.getElementById("qty").value = stock.qty;
-                }
-            };
-            // open xml http request
-            xmlhttp.open("POST", "addStocks/get-stock", true);
-            var data = '_token={{csrf_token()}}&ISBN13=' + str;
-            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            // xhttp.open("GET", "filename", true);
-            
-            // Sends the request to the server
-            xmlhttp.send(data);
+                    }
+                };
+                // open xml http request
+                xmlhttp.open("POST", "addStocks/get-stock", true);
+                var data = '_token={{csrf_token()}}&ISBN13=' + str;
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                // xhttp.open("GET", "filename", true);
+                // Sends the request to the server
+                xmlhttp.send(data);
+            }
         }
-    }
-    </script>
-    <script>
-        coverImg.onchange = evt => {
-        const [file] = coverImg.files
-        if (file) {
-        preview.style.visibility = 'visible';
-
-        preview.src = URL.createObjectURL(file)
-        }
-    }
     </script>
 </body>
 </html>
