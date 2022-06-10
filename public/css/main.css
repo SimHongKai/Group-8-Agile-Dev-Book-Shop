@@ -202,6 +202,25 @@ body {
     padding-bottom:5px;
 }
 
+/*Shipping Address form*/
+#shipping-address-form{
+   display:table;
+   outline-style: solid;
+   outline-color: black;
+   width:580px;
+   background-color: white;
+   padding:100px;
+   margin:0% auto 0;
+}
+
+#shipping-address-container {
+   display: block; 
+   height:auto;
+   position: relative; 
+   width: 90%;
+   align-self: center;
+ }
+
 .btn {
     display: inline-block;
     font-weight: 550;

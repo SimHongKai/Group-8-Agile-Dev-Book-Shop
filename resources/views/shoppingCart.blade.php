@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+S<!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
@@ -15,10 +15,10 @@
     @include('header')
     <div class="add-stock-container">
         <div id='add-stock-content'>
-            <div id = 'add-stock-form'>
+            <div class = 'shipping-address-form'>
                 <h1><font face='Impact'>Shipping Address</font></h1>
-                <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
-                    <!-- Print error message that stock was NOT updated -->
+                <form action="{{route('update-address')}}" method="post" enctype="multipart/form-data">
+                    <!-- Print error message that address was NOT updated -->
                     @if(Session::has('success'))
                     <div class="alert alert-success">{{Session::get('success')}}</div>
                     @endif
@@ -30,12 +30,32 @@
                         <label for="Country" class="col-4 col-form-label">Country</label> 
                         <div class="col-8">
                             <input id="Country" name="Country" placeholder="Country" type="text" class="form-control" 
-                            required="required" value="{{old('Country')}}">
+                            required="required" value="{{old('Country')}}"><br>
                             <span class="text-danger">@error('Country') {{$message}} @enderror</span>
+                        </div>
+                        <label for="State" class="col-4 col-form-label">State</label>
+                        <div class="col-8">
+                            <input id="State" name="State" placeholder="State" type="text" class="form-control" 
+                            required="required" value="{{old('State')}}"><br>
+                        </div>
+                        <label for="District" class="col-4 col-form-label">District</label>
+                        <div class="col-8">
+                            <input id="District" name="District" placeholder="District" type="text" class="form-control" 
+                            required="required" value="{{old('District')}}"><br>
+                        </div>
+                        <label for="Postal" class="col-4 col-form-label">Postal</label>
+                        <div class="col-8">
+                            <input id="Postal" name="Postal" placeholder="Postal Code" type="text" class="form-control" 
+                            required="required" value="{{old('Postal')}}"><br>
+                        </div>
+                        <label for="Address" class="col-4 col-form-label">Address</label>
+                        <div class="col-8">
+                            <input id="Address" name="Address" placeholder="Address" type="text" class="form-control" 
+                            required="required" value="{{old('Address')}}">
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-block btn-primary" type="submit">Place Order</button>
+                        <button class="btn btn-block btn-primary" type="submit">Save as Default</button>
                     </div>
                     <br>
                 </form> 
@@ -43,7 +63,7 @@
             @include('footer')
         </div>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
     </script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
@@ -70,9 +90,16 @@
             .then(function (user) {
                 if (user.country){
                     var Country = document.getElementById('Country');
+                    var State = document.getElementById('State');
+                    var District = document.getElementById('District');
+                    var Postal = document.getElementById('Postal');
+                    var Address = document.getElementById('Address');
                             
                     Country.value = user.country;
-                    // TODO
+                    State.value = user.state;
+                    District.value = user.state;
+                    Postal.value = user.postcode;
+                    Address.value = user.address;
                 
                 }else{ // otherwise call API to get user country
                 getCountry();
