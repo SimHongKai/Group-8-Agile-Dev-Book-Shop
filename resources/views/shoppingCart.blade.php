@@ -9,7 +9,6 @@
     <title>Shopping Cart</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" >
 </head>
 
 <body>
@@ -34,6 +33,7 @@
                     ?>
                     <tr>
                     <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
                         <td>
                             <!--Add quantity-->
@@ -43,35 +43,50 @@
                             <!--Minus quantity-->
                             <a onclick="minusQuantity({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/minus_image.png') }}"width="20px" height="20px"> </a>
                         </td>
+                        <!-- Total price of the book -->
                         <td id = "{{ $shoppingCarts->ISBN13}}Price"><p>RM{{ $shoppingCarts -> retailPrice * $shoppingCarts -> qty }}</p></td>
+                        <!-- Remove button -->
                         <td>
                             <a href="<?php echo url('shoppingCart') ?>"><img src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"> </a> 
                         </td>
                     </tr>
                     @endforeach
-                    <!-- retrieve item quantity and total price-->
+                    <!-- Retrieve item quantity and total price-->
                     <?php
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
+                    Session::put('postageBase', '3');
+                    Session::put('postageIncrement', '1');
+                    $shippingPrice = $price + Session::get('postageBase') + (Session::get('postageIncrement') * $itemCount);
                     ?>
                     <tr>
                         <th></th>
                         <th>Total:</th>
-                        <th><?php echo $itemCount ?> items</th>
-                        <th>RM<?php echo $price ?></th>
+                        <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
+                        <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th>Shipping Fees:</th>
+                        <th><p id = "shippingPrice">RM<?php echo $shippingPrice ?></p></th>
                         <th></th>
                     </tr>
 
                 </table>
+                <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
                 @endif
                         
             </div>
-            <div id = 'add-stock-form'>
+            <div class="add-stock-container">
+            <div id='add-stock-content'>
+            <div class = 'shipping-address-form'>
                 <h1><font face='Impact'>Shipping Address</font></h1>
-                <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
-                    <!-- Print error message that stock was NOT updated -->
+                <form action="{{route('update-address')}}" method="post" enctype="multipart/form-data">
+                    <!-- Print error message that address was NOT updated -->
                     @if(Session::has('success'))
                     <div class="alert alert-success">{{Session::get('success')}}</div>
                     @endif
@@ -83,9 +98,32 @@
                         <label for="Country" class="col-4 col-form-label">Country</label> 
                         <div class="col-8">
                             <input id="Country" name="Country" placeholder="Country" type="text" class="form-control" 
-                            required="required" value="{{old('Country')}}">
+                            required="required" value="{{old('Country')}}"><br>
                             <span class="text-danger">@error('Country') {{$message}} @enderror</span>
                         </div>
+                        <label for="State" class="col-4 col-form-label">State</label>
+                        <div class="col-8">
+                            <input id="State" name="State" placeholder="State" type="text" class="form-control" 
+                            required="required" value="{{old('State')}}"><br>
+                        </div>
+                        <label for="District" class="col-4 col-form-label">District</label>
+                        <div class="col-8">
+                            <input id="District" name="District" placeholder="District" type="text" class="form-control" 
+                            required="required" value="{{old('District')}}"><br>
+                        </div>
+                        <label for="Postal" class="col-4 col-form-label">Postal</label>
+                        <div class="col-8">
+                            <input id="Postal" name="Postal" placeholder="Postal Code" type="text" class="form-control" 
+                            required="required" value="{{old('Postal')}}"><br>
+                        </div>
+                        <label for="Address" class="col-4 col-form-label">Address</label>
+                        <div class="col-8">
+                            <input id="Address" name="Address" placeholder="Address" type="text" class="form-control" 
+                            required="required" value="{{old('Address')}}">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-block btn-primary" type="submit">Save as Default</button>
                     </div>
                     <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Place Order</button>
@@ -93,6 +131,7 @@
                     <br>
                 </form> 
             </div>
+        </div>
             @include('footer')
         </div>
     </div>
@@ -123,12 +162,18 @@
                 var cartPrice = document.getElementById('cartPrice');
                 var itemQty = document.getElementById(ISBN13 + 'Qty');
                 var itemPrice = document.getElementById(ISBN13 + 'Price');
+                var totalQty = document.getElementById('totalQty');
+                var totalPrice = document.getElementById('totalPrice');
+                var shippingPrice = document.getElementById('shippingPrice');
 
                 console.log(response);
                 cartQty.innerHTML = response.qty;
                 cartPrice.innerHTML = "RM" + response.price;
                 itemQty.innerHTML = response.subtotalQty;
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
+                totalQty.innerHTML = response.qty;
+                totalPrice.innerHTML = "RM" + response.price;
+                shippingPrice.innerHTML = "RM" + (response.price + 3 + response.qty);
             }
         })
         .catch(function(error){
@@ -158,12 +203,18 @@
                 var cartPrice = document.getElementById('cartPrice');
                 var itemQty = document.getElementById(ISBN13 + 'Qty');
                 var itemPrice = document.getElementById(ISBN13 + 'Price');
+                var totalQty = document.getElementById('totalQty');
+                var totalPrice = document.getElementById('totalPrice');
+                var shippingPrice = document.getElementById('shippingPrice');
 
                 console.log(response);
                 cartQty.innerHTML = response.qty;
                 cartPrice.innerHTML = "RM" + response.price;
                 itemQty.innerHTML = response.subtotalQty;
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
+                totalQty.innerHTML = response.qty;
+                totalPrice.innerHTML = "RM" + response.price;
+                shippingPrice.innerHTML = "RM" + (response.price + 3 + response.qty);
             }
         })
         .catch(function(error){
@@ -172,7 +223,7 @@
     }
     </script>
 
-    <script type="text/javascript">
+<script type="text/javascript">
         // detect Country API
         document.body.onload = function() {
             getAddress()
@@ -194,9 +245,16 @@
             .then(function (user) {
                 if (user.country){
                     var Country = document.getElementById('Country');
+                    var State = document.getElementById('State');
+                    var District = document.getElementById('District');
+                    var Postal = document.getElementById('Postal');
+                    var Address = document.getElementById('Address');
                             
                     Country.value = user.country;
-                    // TODO
+                    State.value = user.state;
+                    District.value = user.state;
+                    Postal.value = user.postcode;
+                    Address.value = user.address;
                 
                 }else{ // otherwise call API to get user country
                 getCountry();

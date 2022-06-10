@@ -34,6 +34,7 @@ Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('a
 Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
+//Route to add/minus items
 Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addCart');
 Route::post('/shoppingCart/minus-quantity', [HomeController::class,'minusQuantity'])->name('minusCart');
 
