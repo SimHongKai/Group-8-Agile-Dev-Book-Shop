@@ -395,4 +395,6 @@ img.stock-details {
    object-fit: contain;
 }
 
-
+::placeholder{
+   font-size: small;
+}
