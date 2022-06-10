@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\StockController;
+use App\Http\Controllers\HomeController;
 
 
 /*
@@ -27,7 +28,9 @@ Route::get('/logout',[CustomAuthController::class,'logout']);
 Route::get('/home',[CustomAuthController::class,'home']);
 
 //Home Controller
-Route::post('/home', [\App\Http\Controllers\HomeController::class,'processCart'])->name('addCart');
+//Route::post('/home', [HomeController::class,'processCart'])->name('addCart');
+Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('addCart');
+Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
 //Route for stocks
@@ -43,5 +46,6 @@ Route::get('/bookDetail/{ISBN13}', [StockController::class,'viewBookDetails'])->
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);
 Route::post('/editStocks/get-stock', [StockController::class,'getStock']);
+Route::post('/shoppingCart/get-user-address', [HomeController::class,'getUserAddress']);
 // General Route for moving to new pages (dev and testing only, need comment out)
 /* Route::get('/{new_page}',[CustomAuthController::class,'new_page']);    */ 
