@@ -202,6 +202,25 @@ body {
     padding-bottom:5px;
 }
 
+/*Shipping Address form*/
+#shipping-address-form{
+   display:table;
+   outline-style: solid;
+   outline-color: black;
+   width:580px;
+   background-color: white;
+   padding:100px;
+   margin:0% auto 0;
+}
+
+#shipping-address-container {
+   display: block; 
+   height:auto;
+   position: relative; 
+   width: 90%;
+   align-self: center;
+ }
+
 .btn {
     display: inline-block;
     font-weight: 550;
@@ -397,4 +416,33 @@ img.stock-details {
 
 ::placeholder{
    font-size: small;
+}
+.shopping-cart-table {
+   font-family: Arial;
+   border-collapse: collapse;
+   width: 500px;
+   padding:50px;
+   margin: 0 auto;
+}
+
+.shopping-cart-table td, #shopping-cart-table th {
+   border: 2px solid #ddd;
+   padding: 8px;
+}
+
+.shopping-cart-table th {
+   font-size: 14px;
+   padding-top: 12px;
+   padding-bottom: 12px;
+   text-align: center;
+   background-color:#061C37;
+   color:wheat;
+}
+
+.shopping-cart-table tr:nth-child(even){
+   background-color: #f2f2f2;
+}
+
+.shopping-cart-table p {
+   display:inline;
 }
