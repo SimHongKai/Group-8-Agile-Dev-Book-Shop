@@ -31,7 +31,7 @@
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
                     ?>
-                    <tr>
+                    <tr id = "{{ $shoppingCarts->ISBN13}}Row">
                     <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
                         <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
@@ -47,7 +47,7 @@
                         <td id = "{{ $shoppingCarts->ISBN13}}Price"><p>RM{{ $shoppingCarts -> retailPrice * $shoppingCarts -> qty }}</p></td>
                         <!-- Remove button -->
                         <td>
-                        <a href="*"><img  src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"></a>
+                            <a onclick="removeEntry({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"> </a> 
                         </td>
                     </tr>
                     @endforeach
@@ -224,7 +224,48 @@
     }
     </script>
 
-<script type="text/javascript">
+    <script>
+        function removeEntry(ISBN13){
+            fetch('shoppingCart/remove-entry', {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json, text-plain, */*",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $('meta[name="csrf_token"]').attr('content')
+            },
+            body: JSON.stringify({bookISBN: ISBN13}),
+            method: 'post',
+            credentials: "same-origin",})
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (response) {
+            var cartQty = document.getElementById('cartQty');
+            var cartPrice = document.getElementById('cartPrice');
+            var totalQty = document.getElementById('totalQty');
+            var totalPrice = document.getElementById('totalPrice');
+            var shippingPrice = document.getElementById('shippingPrice');
+            var row = document.getElementById(ISBN13+'Row');
+            
+            console.log(response);
+            cartQty.innerHTML = response.qty;
+            cartPrice.innerHTML = "RM" + response.price;
+            totalQty.innerHTML = response.qty;
+            totalPrice.innerHTML = "RM" + response.price;
+            //calculate shipping price
+            shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
+            
+            row.remove();
+
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        });    
+    }
+    </script>
+
+    <script type="text/javascript">
         // detect Country API
         document.body.onload = function() {
             getAddress()

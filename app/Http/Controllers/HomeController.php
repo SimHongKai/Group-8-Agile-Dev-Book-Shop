@@ -58,37 +58,59 @@ class HomeController extends Controller
     }
 
     //function to add 1 quantity in the shopping cart
-    /*public function addQuantity(Request $request)
+    public function addQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Get Value
             $userID = Session::get('userId');
             $ISBN13 = $request->bookISBN;
             $stock = Stock::find($ISBN13);
-
-            //Sum value
-            $newPrice = $this-> calculateNewPrice($stock->retailPrice);
-            $newItemCount = $this-> calculateNewQuantity();
+        
+            $newPrice = Session::get('priceItem');
+            $newItemCount = Session::get('numItem');
             $subtotalPrice = 0;
             $subtotalQty = 0;
 
-            //Update session
-            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
-            
-            //Upload to database 
-            $this -> updateDBadd($userID,$ISBN13);
+            //get current qty
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->Where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
 
-            $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
-            $subtotalQty = $updatedNumValue;
+            //if value would go above maximum, pass alert
+            if ($existingValue >= $stock->qty) {
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($existingValue, $stock->retailPrice);
+                $subtotalQty = $existingValue;
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
 
-            // put cart data in array to be returned
-            $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
-            $data = json_encode($data);
+                return $data;
+            }
+            else {            
+                //Sum value
+                $newPrice = $this-> calculateNewPrice($stock->retailPrice);
+                $newItemCount = $this-> calculateNewQuantity();
+
+                //Update session
+                $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+                //Upload to database
+                $updatedNumValue =$existingValue+1;
+                CartItem::where('userID',$userID) ->Where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
+    
+                //calculate subtotal price and quantity
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
+                $subtotalQty = $updatedNumValue;
+    
+                // put cart data in array to be returned
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
+                
+                return $data;       
+            }
             
-            return $data;
+            }
         }
-    }*/
-    public function addQuantity(Request $request)
+            
+    /*public function addQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Initial value
@@ -127,10 +149,10 @@ class HomeController extends Controller
             
             return $data;
         }
-    }
+    }*/
     
     //function to reduce quantity by 1 in the shopping cart
-    /*public function minusQuantity(Request $request)
+    public function minusQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Get Value
@@ -138,29 +160,52 @@ class HomeController extends Controller
             $ISBN13 = $request->bookISBN;
             $stock = Stock::find($ISBN13);
 
-            //Sum value
-            $newPrice = $this-> calculateNewPrice($stock->retailPrice);
-            $newItemCount = $this-> calculateNewQuantity();
+            $newPrice = Session::get('priceItem');
+            $newItemCount = Session::get('numItem');
             $subtotalPrice = 0;
             $subtotalQty = 0;
-
-            //Update session
-            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
             
-            //Upload to database 
-            $this -> updateDBminus($userID,$ISBN13);
+            //get current qty in shopping cart
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
 
-            $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
-            $subtotalQty = $updatedNumValue;
+            //if value would go below 0, pass alert
+            if ($existingValue == 1) {
+                //return all original values
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($existingValue, $stock->retailPrice);
+                $subtotalQty = $existingValue;
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
 
-            // put cart data in array to be returned
-            $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
-            $data = json_encode($data);
+                return $data;
+            }
+            else {
+                //Sum value
+                $newPrice = $this-> calculateNewPriceMinus($stock->retailPrice);
+                $newItemCount = $this-> calculateNewQuantityMinus();
+                $subtotalPrice = 0;
+                $subtotalQty = 0;
+
+                //Update session
+                $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+                //Upload to database
+                $updatedNumValue =$existingValue-1;
+                CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
+
+                //calculate subtotal price and quantity
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
+                $subtotalQty = $updatedNumValue;
+
+                // put cart data in array to be returned
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
             
-            return $data;
+                return $data;
+            }
         }
-    }*/
-    public function minusQuantity(Request $request)
+    }
+    /*public function minusQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Initial value
@@ -198,6 +243,36 @@ class HomeController extends Controller
             
             return $data;
         }
+    }*/
+
+    public function removeEntry(Request $request)
+    {
+        if (Session::has('userId')) {
+            //get user ID, ISBN13
+            $userID = session::get('userId');
+            $ISBN13 = $request->bookISBN;
+            $stock = Stock::find($ISBN13);
+
+            //get current qty in shopping cart
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
+
+            //calculate new price and quantity 
+            $newPrice = $this -> calculateNewPriceDelete($stock->retailPrice,$existingValue);
+            $newItemCount = $this -> calculateNewQuantityDelete($existingValue);
+
+            //Update session
+            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+            //delete row entry from database
+            $destroy = CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13)->delete();
+
+            // put cart data in array to be returned
+            $data = $this -> isLoggedIn ($newItemCount, $newPrice,True);
+            $data = json_encode($data);
+        
+            return $data;
+        }
     }
 
     //------------------------------------------------------------LOGGED IN------------------------------------------------------------
@@ -206,10 +281,10 @@ class HomeController extends Controller
         return $data;
     }
 
-    /*public function isLoggedIn2($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, $loggedIn){
+    public function isLoggedIn2($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, $loggedIn){
         $data = array('qty' => $newItemCount, 'price' => $newPrice, 'subtotalPrice' => $subtotalPrice, 'subtotalQty' => $subtotalQty, 'login' => $loggedIn);
         return $data;
-    }*/
+    }
 
     //------------------------------------------------------------CALCULATION------------------------------------------------------------
     public function calculateNewPrice($itemPrice){
@@ -224,7 +299,13 @@ class HomeController extends Controller
         return $newQuantity;
     }
 
-    /*public function calculateNewQuantityMinus() {
+    public function calculateNewPriceMinus($itemPrice) {
+        $initialPrice = Session::get('priceItem');
+        $newPrice = $initialPrice-$itemPrice;
+        return $newPrice;
+    }
+
+    public function calculateNewQuantityMinus() {
         $initialItemCount = Session::get('numItem');
         $newQuantity=$initialItemCount-1;
         return $newQuantity;
@@ -233,7 +314,19 @@ class HomeController extends Controller
     public function calculateNewSubtotalPrice($updatedNumValue, $itemPrice) {
         $subtotalPrice = $updatedNumValue * $itemPrice;
         return $subtotalPrice;
-    }*/
+    }
+
+    public function calculateNewPriceDelete($itemPrice,$qty) {
+        $initialPrice = Session::get('priceItem');
+        $newPrice = $initialPrice - ($itemPrice * $qty);
+        return $newPrice;
+    }
+
+    public function calculateNewQuantityDelete($qty) {
+        $initialItemCount = Session::get('numItem');
+        $newQuantity = $initialItemCount - $qty;
+        return $newQuantity;
+    }
 
     //----------------------------------------------------------UPDATE SESSION------------------------------------------------------------
     public function updateSession($newPrice,$newQty){
@@ -305,19 +398,9 @@ class HomeController extends Controller
         if(Session::has('userId')){
             $userID = Session::get('userId');
             $user = User::find($userID);
-            if ($this->userAddressExists($user->id)){
-                return $user;
-            }
-            return null;
+            return $user;
         }
         
         return null;
-    }
-
-    public function userAddressExists($address){
-        if (empty(trim($address))){
-            return false;
-        }
-        return true;
     }
 }
