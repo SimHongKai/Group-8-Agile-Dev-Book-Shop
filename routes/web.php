@@ -35,8 +35,8 @@ Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('s
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
 //Route to add/minus items
-Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addCart');
-Route::post('/shoppingCart/minus-quantity', [HomeController::class,'minusQuantity'])->name('minusCart');
+Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addQuantity');
+Route::post('/shoppingCart/minus-quantity', [HomeController::class,'minusQuantity'])->name('minusQuantity');
 
 //Route for stocks
 Route::get('/addStocks', [StockController::class,'addStocksView'])->name('addStocks');

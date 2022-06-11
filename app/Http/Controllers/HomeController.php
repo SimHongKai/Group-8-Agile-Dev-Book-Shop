@@ -58,7 +58,7 @@ class HomeController extends Controller
     }
 
     //function to add 1 quantity in the shopping cart
-    /*public function addQuantity(Request $request)
+    public function addQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Get Value
@@ -76,7 +76,10 @@ class HomeController extends Controller
             $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
             
             //Upload to database 
-            $this -> updateDBadd($userID,$ISBN13);
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->Where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
+            $updatedNumValue =$existingValue+1;
+            CartItem::where('userID',$userID) ->Where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
 
             $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
             $subtotalQty = $updatedNumValue;
@@ -87,8 +90,8 @@ class HomeController extends Controller
             
             return $data;
         }
-    }*/
-    public function addQuantity(Request $request)
+    }
+    /*public function addQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Initial value
@@ -127,10 +130,10 @@ class HomeController extends Controller
             
             return $data;
         }
-    }
+    }*/
     
     //function to reduce quantity by 1 in the shopping cart
-    /*public function minusQuantity(Request $request)
+    public function minusQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Get Value
@@ -139,8 +142,8 @@ class HomeController extends Controller
             $stock = Stock::find($ISBN13);
 
             //Sum value
-            $newPrice = $this-> calculateNewPrice($stock->retailPrice);
-            $newItemCount = $this-> calculateNewQuantity();
+            $newPrice = $this-> calculateNewPriceMinus($stock->retailPrice);
+            $newItemCount = $this-> calculateNewQuantityMinus();
             $subtotalPrice = 0;
             $subtotalQty = 0;
 
@@ -148,7 +151,10 @@ class HomeController extends Controller
             $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
             
             //Upload to database 
-            $this -> updateDBminus($userID,$ISBN13);
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
+            $updatedNumValue =$existingValue-1;
+            CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
 
             $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
             $subtotalQty = $updatedNumValue;
@@ -159,8 +165,8 @@ class HomeController extends Controller
             
             return $data;
         }
-    }*/
-    public function minusQuantity(Request $request)
+    }
+    /*public function minusQuantity(Request $request)
     {
         if(Session::has('userId')){
             //Initial value
@@ -198,7 +204,7 @@ class HomeController extends Controller
             
             return $data;
         }
-    }
+    }*/
 
     //------------------------------------------------------------LOGGED IN------------------------------------------------------------
     public function isLoggedIn($newItemCount,$newPrice,$loggedIn){
@@ -206,10 +212,10 @@ class HomeController extends Controller
         return $data;
     }
 
-    /*public function isLoggedIn2($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, $loggedIn){
+    public function isLoggedIn2($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, $loggedIn){
         $data = array('qty' => $newItemCount, 'price' => $newPrice, 'subtotalPrice' => $subtotalPrice, 'subtotalQty' => $subtotalQty, 'login' => $loggedIn);
         return $data;
-    }*/
+    }
 
     //------------------------------------------------------------CALCULATION------------------------------------------------------------
     public function calculateNewPrice($itemPrice){
@@ -224,7 +230,13 @@ class HomeController extends Controller
         return $newQuantity;
     }
 
-    /*public function calculateNewQuantityMinus() {
+    public function calculateNewPriceMinus($itemPrice) {
+        $initialPrice = Session::get('priceItem');
+        $newPrice = $initialPrice-$itemPrice;
+        return $newPrice;
+    }
+
+    public function calculateNewQuantityMinus() {
         $initialItemCount = Session::get('numItem');
         $newQuantity=$initialItemCount-1;
         return $newQuantity;
@@ -233,7 +245,7 @@ class HomeController extends Controller
     public function calculateNewSubtotalPrice($updatedNumValue, $itemPrice) {
         $subtotalPrice = $updatedNumValue * $itemPrice;
         return $subtotalPrice;
-    }*/
+    }
 
     //----------------------------------------------------------UPDATE SESSION------------------------------------------------------------
     public function updateSession($newPrice,$newQty){
