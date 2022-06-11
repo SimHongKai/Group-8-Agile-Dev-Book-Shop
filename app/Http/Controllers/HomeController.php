@@ -6,11 +6,13 @@ use Illuminate\Http\Request;
 use App\Models\CartItem;
 use App\Models\User;
 use App\Models\Stock;
+use App\Models\Postage;
 use Session;
 use DB;
 
 class HomeController extends Controller
 {
+
     public function processCart(Request $request)
     {
         if(Session::has('userId')){
@@ -167,7 +169,7 @@ class HomeController extends Controller
             $userID = Session::get('userId');
             // Get ISBN13
             $ISBN13 = $request->bookISBN;
-
+            
             // Get stock data
             $stock = Stock::find($ISBN13);
 
@@ -292,7 +294,8 @@ class HomeController extends Controller
             ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
             ->where('shopping_cart.userID', '=', $userID)
             ->get();
-            return view("shoppingCart")->with(compact('shoppingCart'));
+            $postage = Postage::get();
+            return view("shoppingCart")->with(compact('shoppingCart'))->with(compact('postage'));
         }else{
             return redirect()->route('LoginUser');
         }
@@ -302,9 +305,19 @@ class HomeController extends Controller
         if(Session::has('userId')){
             $userID = Session::get('userId');
             $user = User::find($userID);
-            return $user;
+            if ($this->userAddressExists($user->id)){
+                return $user;
+            }
+            return null;
         }
         
         return null;
+    }
+
+    public function userAddressExists($address){
+        if (empty(trim($address))){
+            return false;
+        }
+        return true;
     }
 }
