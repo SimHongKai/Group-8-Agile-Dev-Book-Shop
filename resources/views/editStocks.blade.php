@@ -124,94 +124,51 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
+    <script type="text/javascript" src="{{ URL::asset('js/addStock.js') }}"></script>
     <script>
-  
-    // onkeyup event will occur when the user 
-    // release the key and calls the function
-    // assigned to this event
-    function getExistingStock(str) {
-        if (str.length == 0) {
-            return;
+        // onkeyup event will occur when the user 
+        // release the key and calls the function
+        // assigned to this event
+        function getExistingStock(str) {
+            if (str.length == 0) {
+                return;
+            }
+            else {
+                // Creates a new XMLHttpRequest object
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function () {
+                    // Defines a function to be called when
+                    // the readyState property changes
+                    if (this.readyState == 4 && this.status == 200) {
+                        
+                            // parse the returned JSON
+                            if (this.responseText == null){
+                                return;
+                            }else{
+                                var stock = JSON.parse(this.responseText);
+                            }
+                            //fill in form data
+                            document.getElementById("bookName").value = stock.bookName;
+                            document.getElementById("bookDesc").value = stock.bookDescription;
+                            document.getElementById("bookAuthor").value = stock.bookAuthor;
+                            document.getElementById("publicationDate").value = stock.publicationDate;
+                            document.getElementById("tradePrice").value = stock.tradePrice;
+                            document.getElementById("retailPrice").value = stock.retailPrice;
+                            document.getElementById("qty").value = stock.qty;
+                    }
+                };
+                // open xml http request
+                xmlhttp.open("POST", "editStocks/get-stock", true);
+                var data = '_token={{csrf_token()}}&ISBN13=' + str;
+                xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+                // xhttp.open("GET", "filename", true);
+                
+                // Sends the request to the server
+                xmlhttp.send(data);
+            }
         }
-        else {
-            // Creates a new XMLHttpRequest object
-            var xmlhttp = new XMLHttpRequest();
-            xmlhttp.onreadystatechange = function () {
-                // Defines a function to be called when
-                // the readyState property changes
-                if (this.readyState == 4 && this.status == 200) {
-                    
-                        // parse the returned JSON
-                        if (this.responseText == null){
-                            return;
-                        }else{
-                            var stock = JSON.parse(this.responseText);
-                        }
-                        //fill in form data
-                        document.getElementById("bookName").value = stock.bookName;
-                        document.getElementById("bookDesc").value = stock.bookDescription;
-                        document.getElementById("bookAuthor").value = stock.bookAuthor;
-                        document.getElementById("publicationDate").value = stock.publicationDate;
-                        document.getElementById("tradePrice").value = stock.tradePrice;
-                        document.getElementById("retailPrice").value = stock.retailPrice;
-                        document.getElementById("qty").value = stock.qty;
-                }
-            };
-            // open xml http request
-            xmlhttp.open("POST", "editStocks/get-stock", true);
-            var data = '_token={{csrf_token()}}&ISBN13=' + str;
-            xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            // xhttp.open("GET", "filename", true);
-            
-            // Sends the request to the server
-            xmlhttp.send(data);
-        }
-    }
     </script>
-    <script>
-        coverImg.onchange = evt => {
-        const [file] = coverImg.files
-        if (file) {
-        preview.style.visibility = 'visible';
-
-        preview.src = URL.createObjectURL(file)
-        }
-    }
-    </script>
-
-<script>
-        var sliderLeft=document.getElementById("tradePrice");
-        var sliderRight=document.getElementById("retailPrice");
-        var inputMin=document.getElementById("tradePriceSlider");
-        var inputMax=document.getElementById("retailPriceSlider");
-
-    ///value updation from input to slider
-    //function input update to slider
-    function sliderLeftInput(){//input update slider left
-        sliderLeft.value=inputMin.value;
-    }
-
-    function sliderRightInput(){//input update slider right
-        sliderRight.value=(inputMax.value);//chnage in input max updated in slider right
-    }
-
-    //calling function on change of inputs to update in slider
-    inputMin.addEventListener("change",sliderLeftInput);
-    inputMax.addEventListener("change",sliderRightInput);
-
-    ///value updation from slider to input
-    //functions to update from slider to inputs 
-    function inputMinSliderLeft(){//slider update inputs
-        inputMin.value=sliderLeft.value;
-    }
-
-    function inputMaxSliderRight(){//slider update inputs
-        inputMax.value=sliderRight.value;
-    }
-
-    sliderLeft.addEventListener("change",inputMinSliderLeft);
-    sliderRight.addEventListener("change",inputMaxSliderRight);
-    </script>
+        
 
 </body>
 </html>

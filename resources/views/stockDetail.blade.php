@@ -33,7 +33,11 @@
                                 <span class="card-title-stock">Book Description:</span>
                                 <span class="card-text-details">{{$stock->bookDescription}}</span><br><br>
                                 <span class="card-title-stock">Quantity:</span>
+                                @if ($stock->qty > 0)
                                 <span class="card-text-details">{{ $stock->qty }}</span><br><br>
+                                @else
+                                <span class="card-text-nostock-details">{{ $stock->qty }}</span><br><br>
+                                @endif
                                 <span class="card-title-stock">Trade Price:</span>
                                 <span class="card-text-details">RM{{$stock->tradePrice}}</span><br><br>
                                 <span class="card-title-stock">Retail Price:</span>

@@ -103,7 +103,7 @@ body {
 
   /*Sign In form*/
  #sign-in-up-form{
-    width:500px;
+    width:580px;
     background-color: white;
     padding:100px;
     margin:0% auto 0;
@@ -202,6 +202,25 @@ body {
     padding-bottom:5px;
 }
 
+/*Shipping Address form*/
+#shipping-address-form{
+   display:table;
+   outline-style: solid;
+   outline-color: black;
+   width:580px;
+   background-color: white;
+   padding:100px;
+   margin:0% auto 0;
+}
+
+#shipping-address-container {
+   display: block; 
+   height:auto;
+   position: relative; 
+   width: 90%;
+   align-self: center;
+ }
+
 .btn {
     display: inline-block;
     font-weight: 550;
@@ -239,6 +258,15 @@ body {
    margin-bottom: 20px;
 }
 
+.card-book-details{
+   display:inline-block;
+   background-color: #fff4a3;
+   width:100%;
+   max-width:1000px;
+   margin-top: 20px;
+   margin-bottom: 20px;
+}
+
 .innerLeft {
    display:inline-block;
    margin-right:-4px;
@@ -260,8 +288,22 @@ body {
    font-weight: bold;
 }
 
+.card-text-nostock{
+   display: inline-block;
+   color: red;
+   font-size: 22px;
+   font-weight: bold;
+}
+
 .card-text-details{
    color: #4c4a37; 
+   font-family: 'Source Sans Pro', sans-serif; 
+   font-size: 22px;
+   font-weight: bold;
+}
+
+.card-text-nostock-details{
+   color: red; 
    font-family: 'Source Sans Pro', sans-serif; 
    font-size: 22px;
    font-weight: bold;
@@ -272,6 +314,23 @@ body {
    font-family: 'Trocchi', serif; 
    font-size: 26px; 
    font-weight: bolder; 
+}
+
+.card-title-product{
+   font-family: 'Enriqueta', arial, serif; 
+   line-height: 1.25; 
+   margin: 0 0 10px; 
+   font-size: 28px; 
+   font-weight: bold;
+}
+
+.card-product-details{
+   color: #333333; 
+   font-family: "Helvetica Neue",Arial,sans-serif; 
+   font-size: 25px; 
+   font-weight: 300; 
+   line-height: 1.5625; 
+   margin-bottom: 25px;
 }
 
 #rangeBox{
@@ -349,4 +408,41 @@ img.stock-details {
    object-fit: contain;
 }
 
+.book-details{
+   width: 100%;
+   height: 100%;
+   object-fit: contain;
+}
 
+::placeholder{
+   font-size: small;
+}
+.shopping-cart-table {
+   font-family: Arial;
+   border-collapse: collapse;
+   width: 500px;
+   padding:50px;
+   margin: 0 auto;
+}
+
+.shopping-cart-table td, #shopping-cart-table th {
+   border: 2px solid #ddd;
+   padding: 8px;
+}
+
+.shopping-cart-table th {
+   font-size: 14px;
+   padding-top: 12px;
+   padding-bottom: 12px;
+   text-align: center;
+   background-color:#061C37;
+   color:wheat;
+}
+
+.shopping-cart-table tr:nth-child(even){
+   background-color: #f2f2f2;
+}
+
+.shopping-cart-table p {
+   display:inline;
+}
