@@ -294,7 +294,7 @@
                             
                     Country.value = user.country;
                     State.value = user.state;
-                    District.value = user.state;
+                    District.value = user.district;
                     Postal.value = user.postcode;
                     Address.value = user.address;
                 

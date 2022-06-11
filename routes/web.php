@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ShoppingCartController;
 
 
 /*
@@ -50,7 +49,7 @@ Route::get('/stockDetail/{ISBN13}', [StockController::class,'viewStockDetails'])
 Route::get('/bookDetail/{ISBN13}', [StockController::class,'viewBookDetails'])->name('bookDetails');
 
 //Route for Cart
-Route::post('/shoppingCart',[ShoppingCartController::class,'updateShippingAddress'])->name('update-address');
+Route::post('/shoppingCart',[HomeController::class,'updateShippingAddress'])->name('update-address');
 
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);
