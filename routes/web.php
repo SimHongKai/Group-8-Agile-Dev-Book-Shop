@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ShoppingCartController;
 
 
 /*
@@ -33,6 +34,10 @@ Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('a
 Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
+//Route to add/minus items
+Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addCart');
+Route::post('/shoppingCart/minus-quantity', [HomeController::class,'minusQuantity'])->name('minusCart');
+
 //Route for stocks
 Route::get('/addStocks', [StockController::class,'addStocksView'])->name('addStocks');
 Route::get('/editStocks', [StockController::class,'editStocksView'])->name('editStocks');
@@ -42,6 +47,9 @@ Route::get('/stocks',[StockController::class,'obtainStock']);
 Route::post('/stocks',[StockController::class,'stockFiltering'])->name('stock-filtering');
 Route::get('/stockDetail/{ISBN13}', [StockController::class,'viewStockDetails'])->name('stockDetails');
 Route::get('/bookDetail/{ISBN13}', [StockController::class,'viewBookDetails'])->name('bookDetails');
+
+//Route for Cart
+Route::post('/shoppingCart',[ShoppingCartController::class,'updateShippingAddress'])->name('update-address');
 
 //Route for xmlhttpRequest
 Route::post('/addStocks/get-stock', [StockController::class,'getStock']);

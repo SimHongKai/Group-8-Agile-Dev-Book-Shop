@@ -65,13 +65,16 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
         return response.json();
     })
     .then(function (response) {
-        if (response){
+        if (response.login){
             var cartQty = document.getElementById('cartQty');
             var cartPrice = document.getElementById('cartPrice');
                        
             console.log(response);
             cartQty.innerHTML = response.qty;
-            cartPrice.innerHTML = response.price;
+            cartPrice.innerHTML = "RM"+ response.price;
+        }
+        else{
+            window.location.href = "{{ route('LoginUser') }}";
         }
     })
     .catch(function(error){
