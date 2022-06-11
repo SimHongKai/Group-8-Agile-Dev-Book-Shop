@@ -71,7 +71,7 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
                        
             console.log(response);
             cartQty.innerHTML = response.qty;
-            cartPrice.innerHTML = response.price;
+            cartPrice.innerHTML = "RM"+ response.price;
         }
         else{
             window.location.href = "{{ route('LoginUser') }}";
