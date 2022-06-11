@@ -55,9 +55,9 @@
                     <?php
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
-                    Session::put('postageBase', '3');
-                    Session::put('postageIncrement', '1');
-                    $shippingPrice = $price + Session::get('postageBase') + (Session::get('postageIncrement') * $itemCount);
+                    $postage_base = Session::get('postageBase');
+                    $postage_increment = Session::get('postageIncrement');
+                    $shippingPrice = $price + $postage_base + ($postage_increment * $itemCount);
                     ?>
                     <tr>
                         <th></th>
@@ -173,7 +173,8 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                shippingPrice.innerHTML = "RM" + (response.price + 3 + response.qty);
+                //calculate shipping price
+                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -214,7 +215,8 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                shippingPrice.innerHTML = "RM" + (response.price + 3 + response.qty);
+                //calculate shipping price
+                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -256,6 +258,21 @@
                     Postal.value = user.postcode;
                     Address.value = user.address;
                 
+                    //if country is Malaysia, set to local
+                    if(user.country == 'Malaysia') {
+                        <?php 
+                            Session::put('postageBase', $postage[0]->local_base); 
+                            Session::put('postageIncrement', $postage[0]->local_increment);
+                        ?>
+                    }
+                    //if not Malaysia, set to international
+                    else {
+                        <?php
+                            Session::put('postageBase', $postage[0]->international_base);
+                            Session::put('postageIncrement', $postage[0]->international_increment);
+                        ?>
+                    }
+
                 }else{ // otherwise call API to get user country
                 getCountry();
                 }
@@ -271,6 +288,11 @@
             })
             .then(function (payload) {
                 document.getElementById("Country").value = payload.location.country.name;
+                //set to local just in case
+                <?php 
+                    Session::put('postageBase', $postage[0]->local_base); 
+                    Session::put('postageIncrement', $postage[0]->local_increment);
+                ?>
                 console.log(payload);
             })
             .catch(function(error){

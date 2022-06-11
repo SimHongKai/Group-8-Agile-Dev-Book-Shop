@@ -10,6 +10,6 @@ class CartItem extends Model
     use HasFactory;
     
     protected $table = 'shopping_cart';
-    protected $fillable = ['userID', 'ISBN13', 'qty'] ;
+    protected $fillable = ['UserID', 'ISBN13', 'qty'] ;
      public $timestamps = false;
 }
