@@ -23,9 +23,15 @@
                 <p1></p1>
                 <p1></p1>
                 <p1></p1>
-                <a href="<?php echo url('home') ?>"  style="text-align:right; padding-top: 8px;"><img src="images/cartIcon.PNG" width="40px" height="40px"></a>
-                <p2>100</p2>
-                <a href="<?php echo url('home') ?>">RM 15.50</a1>
+                <?php
+                $price = Session::get('priceItem');
+                $itemCount = Session::get('numItem');
+                ?>
+                <a href="<?php echo url('shoppingCart') ?>"  style="text-align:right; padding-top: 8px;">
+                <img src="{{ asset('images/cartIcon.png') }}" width="40px" height="40px"></a>
+                <p2 id = "cartQty"><?php echo $itemCount?></p2> <!--Item Num!-->
+                <a id = "cartPrice" href="<?php echo url('shoppingCart') ?>">RM<?php echo $price?></a> <!--Price!-->
+                
                 <a href ="logout" style="color:yellow">Log Out</a>
         <?php
                 }

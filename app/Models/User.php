@@ -11,5 +11,6 @@ class User extends Model
 
     protected $primarykey = 'id';
     protected $table = 'users';
+    protected $fillable = ['username','country','district','postcode','address'] ;
     public $timestamps = false;
 }
