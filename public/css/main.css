@@ -203,10 +203,19 @@ body {
 }
 
 /*Shipping Address form*/
+#shipping-address-content {
+   width:80%;
+   border: 2px#061C37;
+   border-style: solid;
+   border-radius: 25px;
+   height:auto;
+   background-color: white;
+   padding-left:10px;
+   padding-right:10px;
+   padding-bottom:5px;
+}
+
 #shipping-address-form{
-   display:table;
-   outline-style: solid;
-   outline-color: black;
    width:580px;
    background-color: white;
    padding:100px;
@@ -217,7 +226,7 @@ body {
    display: block; 
    height:auto;
    position: relative; 
-   width: 90%;
+   width: 80%;
    align-self: center;
  }
 
