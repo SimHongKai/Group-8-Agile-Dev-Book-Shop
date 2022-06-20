@@ -31,7 +31,7 @@
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
                     ?>
-                    <tr>
+                    <tr id = "{{ $shoppingCarts->ISBN13}}Row">
                     <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
                         <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
@@ -47,7 +47,7 @@
                         <td id = "{{ $shoppingCarts->ISBN13}}Price"><p>RM{{ $shoppingCarts -> retailPrice * $shoppingCarts -> qty }}</p></td>
                         <!-- Remove button -->
                         <td>
-                            <a href="<?php echo url('shoppingCart') ?>"><img src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"> </a> 
+                            <a onclick="removeEntry({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"> </a> 
                         </td>
                     </tr>
                     @endforeach
@@ -55,22 +55,12 @@
                     <?php
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
-                    $postage_base = Session::get('postageBase');
-                    $postage_increment = Session::get('postageIncrement');
-                    $shippingPrice = $price + $postage_base + ($postage_increment * $itemCount);
                     ?>
                     <tr>
                         <th></th>
                         <th>Total:</th>
                         <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
                         <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>Shipping Fees:</th>
-                        <th><p id = "shippingPrice">RM<?php echo $shippingPrice ?></p></th>
                         <th></th>
                     </tr>
 
@@ -81,8 +71,8 @@
                 @endif
                         
             </div>
-            <div class="add-stock-container">
-            <div id='add-stock-content'>
+            <div class="shipping-address-container">
+            <div id='shipping-address-content'>
             <div class = 'shipping-address-form'>
                 <h1><font face='Impact'>Shipping Address</font></h1>
                 <form action="{{route('update-address')}}" method="post" enctype="multipart/form-data">
@@ -124,13 +114,12 @@
                     </div>
                     <div class="form-group">
                         <button class="btn btn-block btn-primary" type="submit">Save as Default</button>
-                    </div>
-                    <div class="form-group">
-                        <button class="btn btn-block btn-primary" type="submit">Place Order</button>
-                    </div>
-                    <br>
+                    </div>    
                 </form> 
+            </div>    
             </div>
+            </div>
+            <br><br><a href="{{ route('checkout')}}"><button class="btn btn-block btn-primary">Place Order</button></a>
         </div>
             @include('footer')
         </div>
@@ -164,7 +153,6 @@
                 var itemPrice = document.getElementById(ISBN13 + 'Price');
                 var totalQty = document.getElementById('totalQty');
                 var totalPrice = document.getElementById('totalPrice');
-                var shippingPrice = document.getElementById('shippingPrice');
 
                 console.log(response);
                 cartQty.innerHTML = response.qty;
@@ -173,8 +161,6 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                //calculate shipping price
-                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -215,8 +201,6 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                //calculate shipping price
-                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -225,7 +209,46 @@
     }
     </script>
 
-<script type="text/javascript">
+    <script>
+        function removeEntry(ISBN13){
+            fetch('shoppingCart/remove-entry', {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json, text-plain, */*",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $('meta[name="csrf_token"]').attr('content')
+            },
+            body: JSON.stringify({bookISBN: ISBN13}),
+            method: 'post',
+            credentials: "same-origin",})
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (response) {
+            var cartQty = document.getElementById('cartQty');
+            var cartPrice = document.getElementById('cartPrice');
+            var totalQty = document.getElementById('totalQty');
+            var totalPrice = document.getElementById('totalPrice');
+            var shippingPrice = document.getElementById('shippingPrice');
+            var row = document.getElementById(ISBN13+'Row');
+            
+            console.log(response);
+            cartQty.innerHTML = response.qty;
+            cartPrice.innerHTML = "RM" + response.price;
+            totalQty.innerHTML = response.qty;
+            totalPrice.innerHTML = "RM" + response.price;
+            
+            row.remove();
+
+            
+        })
+        .catch(function(error){
+            console.log(error)
+        });    
+    }
+    </script>
+
+    <script type="text/javascript">
         // detect Country API
         document.body.onload = function() {
             getAddress()
@@ -254,7 +277,7 @@
                             
                     Country.value = user.country;
                     State.value = user.state;
-                    District.value = user.state;
+                    District.value = user.district;
                     Postal.value = user.postcode;
                     Address.value = user.address;
                 

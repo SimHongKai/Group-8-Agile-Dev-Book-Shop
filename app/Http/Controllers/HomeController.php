@@ -39,6 +39,7 @@ class HomeController extends Controller
                 else{
                     $this -> uploadDB($userID,$ISBN13);
                 }
+
             }
             
             else{
@@ -65,32 +66,51 @@ class HomeController extends Controller
             $userID = Session::get('userId');
             $ISBN13 = $request->bookISBN;
             $stock = Stock::find($ISBN13);
-
-            //Sum value
-            $newPrice = $this-> calculateNewPrice($stock->retailPrice);
-            $newItemCount = $this-> calculateNewQuantity();
+        
+            $newPrice = Session::get('priceItem');
+            $newItemCount = Session::get('numItem');
             $subtotalPrice = 0;
             $subtotalQty = 0;
 
-            //Update session
-            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
-            
-            //Upload to database 
+            //get current qty
             $existingValue = CartItem::select('qty')->where('userID',$userID) ->Where('ISBN13',$ISBN13) ->get();
             $existingValue = preg_replace('/[^0-9]/','',$existingValue);
-            $updatedNumValue =$existingValue+1;
-            CartItem::where('userID',$userID) ->Where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
 
-            $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
-            $subtotalQty = $updatedNumValue;
+            //if value would go above maximum, pass alert
+            if ($existingValue >= $stock->qty) {
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($existingValue, $stock->retailPrice);
+                $subtotalQty = $existingValue;
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
 
-            // put cart data in array to be returned
-            $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
-            $data = json_encode($data);
+                return $data;
+            }
+            else {            
+                //Sum value
+                $newPrice = $this-> calculateNewPrice($stock->retailPrice);
+                $newItemCount = $this-> calculateNewQuantity();
+
+                //Update session
+                $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+                //Upload to database
+                $updatedNumValue =$existingValue+1;
+                CartItem::where('userID',$userID) ->Where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
+    
+                //calculate subtotal price and quantity
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
+                $subtotalQty = $updatedNumValue;
+    
+                // put cart data in array to be returned
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
+                
+                return $data;       
+            }
             
-            return $data;
+            }
         }
-    }
+            
     /*public function addQuantity(Request $request)
     {
         if(Session::has('userId')){
@@ -141,29 +161,49 @@ class HomeController extends Controller
             $ISBN13 = $request->bookISBN;
             $stock = Stock::find($ISBN13);
 
-            //Sum value
-            $newPrice = $this-> calculateNewPriceMinus($stock->retailPrice);
-            $newItemCount = $this-> calculateNewQuantityMinus();
+            $newPrice = Session::get('priceItem');
+            $newItemCount = Session::get('numItem');
             $subtotalPrice = 0;
             $subtotalQty = 0;
-
-            //Update session
-            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
             
-            //Upload to database 
+            //get current qty in shopping cart
             $existingValue = CartItem::select('qty')->where('userID',$userID) ->where('ISBN13',$ISBN13) ->get();
             $existingValue = preg_replace('/[^0-9]/','',$existingValue);
-            $updatedNumValue =$existingValue-1;
-            CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
 
-            $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
-            $subtotalQty = $updatedNumValue;
+            //if value would go below 0, pass alert
+            if ($existingValue == 1) {
+                //return all original values
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($existingValue, $stock->retailPrice);
+                $subtotalQty = $existingValue;
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
 
-            // put cart data in array to be returned
-            $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
-            $data = json_encode($data);
+                return $data;
+            }
+            else {
+                //Sum value
+                $newPrice = $this-> calculateNewPriceMinus($stock->retailPrice);
+                $newItemCount = $this-> calculateNewQuantityMinus();
+                $subtotalPrice = 0;
+                $subtotalQty = 0;
+
+                //Update session
+                $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+                //Upload to database
+                $updatedNumValue =$existingValue-1;
+                CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
+
+                //calculate subtotal price and quantity
+                $subtotalPrice = $this -> calculateNewSubtotalPrice($updatedNumValue, $stock->retailPrice);
+                $subtotalQty = $updatedNumValue;
+
+                // put cart data in array to be returned
+                $data = $this -> isLoggedIn2 ($newItemCount, $newPrice, $subtotalPrice, $subtotalQty, True);
+                $data = json_encode($data);
             
-            return $data;
+                return $data;
+            }
         }
     }
     /*public function minusQuantity(Request $request)
@@ -206,6 +246,71 @@ class HomeController extends Controller
         }
     }*/
 
+    public function removeEntry(Request $request)
+    {
+        if (Session::has('userId')) {
+            //get user ID, ISBN13
+            $userID = session::get('userId');
+            $ISBN13 = $request->bookISBN;
+            $stock = Stock::find($ISBN13);
+
+            //get current qty in shopping cart
+            $existingValue = CartItem::select('qty')->where('userID',$userID) ->where('ISBN13',$ISBN13) ->get();
+            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
+
+            //calculate new price and quantity 
+            $newPrice = $this -> calculateNewPriceDelete($stock->retailPrice,$existingValue);
+            $newItemCount = $this -> calculateNewQuantityDelete($existingValue);
+
+            //Update session
+            $sessionUpdated = $this -> updateSession($newPrice,$newItemCount,$request);
+
+            //delete row entry from database
+            $destroy = CartItem::where('userID',$userID) ->where('ISBN13',$ISBN13)->delete();
+
+            // put cart data in array to be returned
+            $data = $this -> isLoggedIn ($newItemCount, $newPrice,True);
+            $data = json_encode($data);
+        
+            return $data;
+        }
+    }
+
+    /**
+     * Add new shipping address
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateShippingAddress(Request $request){
+        // Get Logged In User Id
+        $userId = $this->getSessionUserId();
+
+        // Validate Shipping Address Info
+        $this->validateShippingAddress($request);
+
+        // Save User New Shipping Address
+        $newAddress = User::where('id','=',$userId)->first();
+        // Upload Shipping Address to Database
+        if($newAddress){
+        $newAddress->country = $request->Country;
+        $newAddress->State = $request->State;
+        $newAddress->district = $request->District;
+        $newAddress->postcode = $request->Postal;
+        $newAddress->address = $request->Address;
+        $res = $newAddress->save();
+        }
+        
+        if($res){
+            return redirect('shoppingCart')->with('success', 'Address has been added successfully');
+        }
+
+        else{
+            return redirect('shoppingCart')->with('fail','Fail to Add Address');
+        }
+    }
+    
+
     //------------------------------------------------------------LOGGED IN------------------------------------------------------------
     public function isLoggedIn($newItemCount,$newPrice,$loggedIn){
         $data = array('qty' => $newItemCount, 'price' => $newPrice, 'login' => $loggedIn);
@@ -230,6 +335,7 @@ class HomeController extends Controller
         return $newQuantity;
     }
 
+
     public function calculateNewPriceMinus($itemPrice) {
         $initialPrice = Session::get('priceItem');
         $newPrice = $initialPrice-$itemPrice;
@@ -247,11 +353,42 @@ class HomeController extends Controller
         return $subtotalPrice;
     }
 
+    public function calculateNewPriceDelete($itemPrice,$qty) {
+        $initialPrice = Session::get('priceItem');
+        $newPrice = $initialPrice - ($itemPrice * $qty);
+        return $newPrice;
+    }
+
+    public function calculateNewQuantityDelete($qty) {
+        $initialItemCount = Session::get('numItem');
+        $newQuantity = $initialItemCount - $qty;
+        return $newQuantity;
+    }
+
     //----------------------------------------------------------UPDATE SESSION------------------------------------------------------------
     public function updateSession($newPrice,$newQty){
         Session:: put('numItem',$newQty);
         Session:: put('priceItem',$newPrice);
         return true;
+    }
+
+    //------------------------------------------------------RETRIEVE SESSION DATA-----------------------------------------------------------
+    public function getSessionUserId(){
+        if(Session::has('userId')){
+            $userId = Session::get('userId');
+        }
+        return $userId;
+    }
+
+    //---------------------------------------------------VALIDATE FORM REQUESTS--------------------------------------------------------------
+    public function validateShippingAddress(Request $request){
+        $request->validate([
+            'Country' => 'required|min:0|max:100|',
+            'State' =>  'required|min:0|max:100|',
+            'District' => 'required|min:0|max:100|',
+            'Postal' => 'required|min:3|max:50|',
+            'Address' => 'required|min:0|max:200|',
+        ]);
     }
 
     //-----------------------------------------------------CHECK BOOK EXIST FOR USER-------------------------------------------------------
