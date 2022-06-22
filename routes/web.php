@@ -5,6 +5,7 @@ use App\Http\Controllers\CustomAuthController;
 use App\Http\Controllers\StockController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EmailController;
+use App\Http\Controllers\ShoppingCartController;
 
 
 /*
@@ -32,6 +33,7 @@ Route::get('/home',[CustomAuthController::class,'home']);
 //Route::post('/home', [HomeController::class,'processCart'])->name('addCart');
 Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('addCart');
 Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
+Route::get('/checkout', [ShoppingCartController::class,'checkoutView'])->name('checkout');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
 //Route to add/minus/remove items
