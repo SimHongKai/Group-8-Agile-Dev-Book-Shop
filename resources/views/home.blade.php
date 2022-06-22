@@ -27,6 +27,7 @@
                             <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/></a><br>
                         <a href = "{{ route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
                                 <h5>{{ $stock->bookName }}</h5></a><br>
+
                                 <h5>Price: RM{{ $stock->retailPrice }}</h4><br>
                                 @if (session()->get('userPrivilige') == 2)
                                 @elseif ($stock->qty > 0)
