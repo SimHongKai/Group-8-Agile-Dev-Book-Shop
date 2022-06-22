@@ -39,6 +39,7 @@ class HomeController extends Controller
                 else{
                     $this -> uploadDB($userID,$ISBN13);
                 }
+
             }
             
             else{
@@ -333,6 +334,7 @@ class HomeController extends Controller
         $newQuantity=$initialItemCount+1;
         return $newQuantity;
     }
+
 
     public function calculateNewPriceMinus($itemPrice) {
         $initialPrice = Session::get('priceItem');
