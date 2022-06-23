@@ -31,6 +31,7 @@
                                 <h5>Price: RM{{ $stock->retailPrice }}</h4><br>
                                 @if (session()->get('userPrivilige') == 2)
                                 @elseif ($stock->qty > 0)
+                                <h5>Current Stock: {{ $stock->qty}}</h5><br>
                                 <div id="home-button">
                                     <button name="addButton" onclick="addItemToCart({{ $stock->ISBN13 }})" 
                                     class="btn btn-info">Add to Cart</button>

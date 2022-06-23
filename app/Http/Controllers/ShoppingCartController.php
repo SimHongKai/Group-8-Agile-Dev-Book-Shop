@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\CartItem;
 use App\Models\User;
+use App\Models\Postage;
 use App\Models\Stock;
 use Session;
 use DB;
@@ -57,6 +58,21 @@ class ShoppingCartController extends Controller
             'Postal' => 'required|min:3|max:50|',
             'Address' => 'required|min:0|max:200|',
         ]);
+    }
+
+    public function checkoutView(Request $request){
+        if(Session::has('userId')){
+            $userID = Session::get('userId');
+            $shoppingCart = DB::table('shopping_cart')
+            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.retailPrice')
+            ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
+            ->where('shopping_cart.userID', '=', $userID)
+            ->get();
+            $postage = Postage::get();
+            return view("checkout")->with(compact('shoppingCart'))->with(compact('postage'));
+        }else{
+            return redirect()->route('checkout');
+        }
     }
 }
 ?>

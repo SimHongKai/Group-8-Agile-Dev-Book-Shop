@@ -55,22 +55,12 @@
                     <?php
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
-                    $postage_base = Session::get('postageBase');
-                    $postage_increment = Session::get('postageIncrement');
-                    $shippingPrice = $price + $postage_base + ($postage_increment * $itemCount);
                     ?>
                     <tr>
                         <th></th>
                         <th>Total:</th>
                         <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
                         <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <th></th>
-                        <th></th>
-                        <th>Shipping Fees:</th>
-                        <th><p id = "shippingPrice">RM<?php echo $shippingPrice ?></p></th>
                         <th></th>
                     </tr>
 
@@ -129,7 +119,7 @@
             </div>    
             </div>
             </div>
-            <br><br><button class="btn btn-block btn-primary" type="submit">Place Order</button>
+            <br><br><a href="{{ route('checkout')}}"><button class="btn btn-block btn-primary">Place Order</button></a>
         </div>
             @include('footer')
         </div>
@@ -163,7 +153,6 @@
                 var itemPrice = document.getElementById(ISBN13 + 'Price');
                 var totalQty = document.getElementById('totalQty');
                 var totalPrice = document.getElementById('totalPrice');
-                var shippingPrice = document.getElementById('shippingPrice');
 
                 console.log(response);
                 cartQty.innerHTML = response.qty;
@@ -172,8 +161,6 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                //calculate shipping price
-                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -214,8 +201,6 @@
                 itemPrice.innerHTML = "RM" + response.subtotalPrice;
                 totalQty.innerHTML = response.qty;
                 totalPrice.innerHTML = "RM" + response.price;
-                //calculate shipping price
-                shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             }
         })
         .catch(function(error){
@@ -252,8 +237,6 @@
             cartPrice.innerHTML = "RM" + response.price;
             totalQty.innerHTML = response.qty;
             totalPrice.innerHTML = "RM" + response.price;
-            //calculate shipping price
-            shippingPrice.innerHTML = "RM" + (response.price + <?php echo Session::get('postageBase'); ?> + (<?php echo Session::get('postageIncrement'); ?> * response.qty));
             
             row.remove();
 
