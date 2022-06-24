@@ -18,7 +18,9 @@
                
                 @if($insufficientStock)
                     @foreach($insufficientStock as $insufficientStocks) 
-                        <p>hi</p>
+                        <?php
+                        echo" $insufficientStocks";
+                        ?>
                     @endforeach
                 @endif
                

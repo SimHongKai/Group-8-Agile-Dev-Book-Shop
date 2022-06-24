@@ -102,9 +102,11 @@ class ShoppingCartController extends Controller
                 $itemRetailPrice = preg_replace('/[^0-9.]/','',$itemRetailPrice);
                 $newPrice = ($itemRetailPrice * $StockCartValue)+$newPrice;
                 $qtyChanged = $StockCartValue - $existingCartValue;
+                
                 $bookName = Stock::select('bookName')->Where('ISBN13',$shoppingCarts->ISBN13) ->get();
-                $bookName = preg_replace('/[^0-9.]/','',$bookName);
-                $insufficientStock = array('book_name' => $shoppingCarts->ISBN13, 'book_ISBN13' => $shoppingCarts->ISBN13, 'stock_qty' => $StockCartValue,'qty_changed' => $qtyChanged);
+                $bookName = preg_replace('/\bbookName\b/', '',$bookName);
+                $bookName = preg_replace('/[^A-Za-z0-9 \-]/', '',$bookName);
+                $insufficientStock = array('book_name' => $bookName, 'book_ISBN13' => $shoppingCarts->ISBN13, 'stock_qty' => $StockCartValue,'qty_changed' => $qtyChanged);
             }
 
             else{
