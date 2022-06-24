@@ -15,6 +15,13 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Checkout</font></h1>
+               
+                @if($insufficientStock)
+                    @foreach($insufficientStock as $insufficientStocks) 
+                        <p>hi</p>
+                    @endforeach
+                @endif
+               
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
@@ -69,9 +76,21 @@
                     </tr>
                 </table>
                 @endif
-                </div>
-                    <br><br><button class="btn btn-block btn-primary" type="submit">Proceed</button>
-                </div>
+                <table cellspacing="10">
+                    <tr>
+                        <td>
+                            </div>
+                                <br><a href ="shoppingCart"><button div id = 'returnButton'>Return to Shopping Cart</button></a></div>
+                            </div>
+                        </td>
+                        
+                        <td>
+                            </div>
+                                <br><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
             </div>
             @include('footer')
         </div>
