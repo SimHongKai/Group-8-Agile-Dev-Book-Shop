@@ -70,7 +70,7 @@
                 </table>
                 @endif
                 </div>
-                    <br><br><button class="btn btn-block btn-primary" type="submit">Proceed</button>
+                    <br><br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit">Proceed</button></a>
                 </div>
             </div>
             @include('footer')

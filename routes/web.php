@@ -6,6 +6,7 @@ use App\Http\Controllers\StockController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\EmailController;
 use App\Http\Controllers\ShoppingCartController;
+use App\Http\Controllers\PaymentController;
 
 
 /*
@@ -35,6 +36,9 @@ Route::post('/home/add-to-cart', [HomeController::class,'processCart'])->name('a
 Route::get('/shoppingCart', [HomeController::class,'shoppingCartView'])->name('shoppingCart');
 Route::get('/checkout', [ShoppingCartController::class,'checkoutView'])->name('checkout');
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
+
+//Route for Checkout
+Route::get('/payment', [PaymentController::class, 'paymentView'])->name('payment');
 
 //Route to add/minus/remove items
 Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addQuantity');

@@ -455,3 +455,33 @@ img.stock-details {
 .shopping-cart-table p {
    display:inline;
 }
+
+.payment-table {
+   font-family: Arial;
+   border-collapse: collapse;
+   width: 500px;
+   padding:50px;
+   margin: 0 auto;
+}
+
+.payment-table td, #payment-table th {
+   border: 2px solid #ddd;
+   padding: 8px;
+}
+
+.payment-table th {
+   font-size: 14px;
+   padding-top: 12px;
+   padding-bottom: 12px;
+   text-align: center;
+   background-color:#061C37;
+   color:wheat;
+}
+
+.payment-table tr:nth-child(even){
+   background-color: #f2f2f2;
+}
+
+.payment-table p {
+   display:inline;
+}
