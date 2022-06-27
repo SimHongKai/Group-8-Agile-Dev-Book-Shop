@@ -110,10 +110,10 @@ class ShoppingCartController extends Controller
             }
 
             else{
-                $newQty = $newQty + $StockCartValue;
+                $newQty = $newQty + $existingCartValue;
                 $itemRetailPrice = Stock::select('retailPrice')->Where('ISBN13',$shoppingCarts->ISBN13) ->get();
                 $itemRetailPrice = preg_replace('/[^0-9.]/','',$itemRetailPrice);
-                $newPrice = ($itemRetailPrice * $StockCartValue)+$newPrice;
+                $newPrice = ($itemRetailPrice * $existingCartValue)+$newPrice;
             }
         }
         
