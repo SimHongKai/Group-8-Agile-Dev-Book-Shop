@@ -81,7 +81,7 @@ class ShoppingCartController extends Controller
         $newQty=0;
         $newPrice=0;
         $res=FALSE;
-        $insufficientStock = "";
+        $insufficientStock = array();
 
         $shoppingCartItems = DB::table('shopping_cart')
             ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID')
@@ -101,12 +101,12 @@ class ShoppingCartController extends Controller
                 $itemRetailPrice = Stock::select('retailPrice')->Where('ISBN13',$shoppingCarts->ISBN13) ->get();
                 $itemRetailPrice = preg_replace('/[^0-9.]/','',$itemRetailPrice);
                 $newPrice = ($itemRetailPrice * $StockCartValue)+$newPrice;
-                $qtyChanged = $StockCartValue - $existingCartValue;
+                $qtyChanged = $existingCartValue - $StockCartValue;
                 
                 $bookName = Stock::select('bookName')->Where('ISBN13',$shoppingCarts->ISBN13) ->get();
                 $bookName = preg_replace('/\bbookName\b/', '',$bookName);
                 $bookName = preg_replace('/[^A-Za-z0-9 \-]/', '',$bookName);
-                $insufficientStock = array('book_name' => $bookName, 'book_ISBN13' => $shoppingCarts->ISBN13, 'stock_qty' => $StockCartValue,'qty_changed' => $qtyChanged);
+                $insufficientStock[$bookName] = $qtyChanged;
             }
 
             else{

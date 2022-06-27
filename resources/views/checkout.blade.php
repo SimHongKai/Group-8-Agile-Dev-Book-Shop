@@ -6,6 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <title>Checkout</title>
 </head>
 
@@ -15,15 +17,17 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Checkout</font></h1>
-               
+                
+                <!-- Display items removed from shopping cart due to insufficient stock -->
                 @if($insufficientStock)
-                    @foreach($insufficientStock as $insufficientStocks) 
-                        <?php
-                        echo" $insufficientStocks";
-                        ?>
-                    @endforeach
+                    <div class="alert alert-success">
+                        <p>The following items were removed from your shopping cart due to insufficient stock:</p>
+                        @foreach($insufficientStock as $bookName => $qtyChanged) 
+                            <p>{{ $bookName }}: {{ $qtyChanged }}</p>
+                        @endforeach
+                    </div>
                 @endif
-               
+                
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
