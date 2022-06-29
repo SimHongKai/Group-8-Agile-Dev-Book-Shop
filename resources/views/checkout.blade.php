@@ -83,7 +83,6 @@
                 </table>
                 @endif
                 </div>
-                    <br><br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit">Proceed</button></a>
                 </div>
                 <table cellspacing="10">
                     <tr>
@@ -95,7 +94,7 @@
                         
                         <td>
                             </div>
-                                <br><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button>
+                                <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button></a>
                             </div>
                         </td>
                     </tr>

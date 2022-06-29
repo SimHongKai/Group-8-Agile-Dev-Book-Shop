@@ -40,6 +40,9 @@ Route::get('/checkout', [ShoppingCartController::class,'checkoutView'])->name('c
 //Route for Checkout
 Route::get('/payment', [PaymentController::class, 'paymentView'])->name('payment');
 
+//Route for Payment
+Route::post('/payment',[PaymentController::class, 'processPayment'])->name('submitpayment');
+
 //Route to add/minus/remove items
 Route::post('/shoppingCart/add-quantity', [HomeController::class,'addQuantity'])->name('addQuantity');
 Route::post('/shoppingCart/minus-quantity', [HomeController::class,'minusQuantity'])->name('minusQuantity');

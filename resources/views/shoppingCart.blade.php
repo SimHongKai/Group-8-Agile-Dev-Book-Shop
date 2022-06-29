@@ -17,6 +17,7 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Shopping Cart</font></h1>
+                @if(!$shoppingCart->isEmpty())
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
@@ -25,7 +26,6 @@
                         <th>Total Price</th>
                         <th>Remove</th>
                     </tr>
-                    @if(!$shoppingCart->isEmpty())
                     @foreach($shoppingCart as $shoppingCarts) 
                     <?php
                     $price = Session::get('priceItem');
@@ -64,11 +64,12 @@
                         <th></th>
                     </tr>
 
-                </table>
+                
                 <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
                 @endif
+            </table>
                         
             </div>
             <div class="shipping-address-container">
