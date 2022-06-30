@@ -61,6 +61,21 @@ class ShoppingCartController extends Controller
     }
 
     public function checkoutView(Request $request){
+        if(Session::get('numItem') == 0) {
+            return redirect('home');
+        }
+        // set postage fee based on address
+        $postage = Postage::first();
+        if($request->Country == 'Malaysia') {
+            Session::put('postageBase', $postage->local_base); 
+            Session::put('postageIncrement', $postage->local_increment);
+        }
+        //if not Malaysia, set to international
+        else {
+            Session::put('postageBase', $postage->international_base);
+            Session::put('postageIncrement', $postage->international_increment);
+        }
+
         $insufficientStock = $this->adjustOutofStock();
         if(Session::has('userId')){
             $userID = Session::get('userId');

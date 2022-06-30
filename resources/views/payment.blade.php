@@ -7,8 +7,8 @@
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Payment Page</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <script src="https://use.fontawesome.com/29ecae9da7.js"></script>
 </head>
 
@@ -25,10 +25,11 @@
         <div class="alert alert-danger">{{Session::get('fail')}}</div>
         @endif
             <?php
-            $price = Session::get('priceItem');
-            $itemCount = Session::get('numItem');
+                $price = Session::get('priceItem');
+                $postagePrice = Session::get('postagePrice');
+                $itemCount = Session::get('numItem');
             ?>
-            <h2>Paying For: <p id="totalPrice">RM<?php echo $price?></p></h2><br><br>
+            <h2>Paying For: <p id="totalPrice">RM<?php echo $price + $postagePrice?></p></h2><br><br>
             <div class="shipping-address-container">
             <div id='shipping-address-content'>
             <div class = 'shipping-address-form'>
@@ -59,12 +60,12 @@
                     <input id="expirydate" name="expirydate" placeholder="MM/YY" type="text" class="form-control" 
                     required="required" size="5" maxlength="5" value="{{old('expirydate')}}"><br>
                 </div>
-                <div class="col-2">
-                <label for="ccv">CVV: </label>
-                <input id="cvv" name="cvv" size="3" placeholder="123" type="password" class="form-control" 
-                required="required" value="{{old('cvv')}}"><br>
+                    <div class="col-2">
+                    <label for="ccv">CVV: </label>
+                    <input id="cvv" name="cvv" size="3" placeholder="123" type="password" class="form-control" 
+                    required="required" value="{{old('cvv')}}"><br>
+                    </div>
                 </div>
-            </div>
                 <table cellspacing="10">
                     <tr>
                         <td>
@@ -80,7 +81,7 @@
                         </td>
                     </tr>
                 </table>
-                </form>
+            </form>
         </div>
         </div>
         </div>

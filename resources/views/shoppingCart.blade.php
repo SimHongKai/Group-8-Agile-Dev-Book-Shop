@@ -7,20 +7,20 @@
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
 </head>
 
 <body>
     @include('header')
     <div class="add-stock-container">
         <div id='add-stock-content'>
-            <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Shopping Cart</font></h1>
                 @if(!$shoppingCart->isEmpty())
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
+                        <th>Book Name</th>
                         <th>Price By Unit</th>
                         <th>Quantity</th>
                         <th>Total Price</th>
@@ -32,7 +32,8 @@
                     $itemCount = Session::get('numItem');
                     ?>
                     <tr id = "{{ $shoppingCarts->ISBN13}}Row">
-                    <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <td>{{ $shoppingCarts -> bookName }}</td>
                         <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
                         <td>
@@ -58,20 +59,20 @@
                     ?>
                     <tr>
                         <th></th>
+                        <th></th>
                         <th>Total:</th>
                         <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
                         <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
                         <th></th>
                     </tr>
+                </table>
 
                 
                 <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
                 @endif
-            </table>
-                        
-            </div>
+                <br><br>
             <div class="shipping-address-container">
             <div id='shipping-address-content'>
             <div class = 'shipping-address-form'>
@@ -125,11 +126,11 @@
             @include('footer')
         </div>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
     </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
-    </script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
+    </script> -->
 
     <script>
         function addQuantity(ISBN13){
@@ -305,6 +306,7 @@
                 console.log(error)
             });    
         }
+        
         function getCountry(){
             fetch('https://api.ipregistry.co/?key=tryout')
             .then(function (response) {

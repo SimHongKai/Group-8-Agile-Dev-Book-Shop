@@ -408,7 +408,7 @@ class HomeController extends Controller
         if(Session::has('userId')){
             $userID = Session::get('userId');
             $shoppingCart = DB::table('shopping_cart')
-            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.retailPrice')
+            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.bookName', 'stock.retailPrice')
             ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
             ->where('shopping_cart.userID', '=', $userID)
             ->get();
