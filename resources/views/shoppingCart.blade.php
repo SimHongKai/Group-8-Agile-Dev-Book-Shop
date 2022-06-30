@@ -7,8 +7,8 @@
     <meta name="csrf_token" content="{{ csrf_token() }}">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"> 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
 </head>
 
 <body>
@@ -17,6 +17,7 @@
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Shopping Cart</font></h1>
+                @if(!$shoppingCart->isEmpty())
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
@@ -25,7 +26,6 @@
                         <th>Total Price</th>
                         <th>Remove</th>
                     </tr>
-                    @if(!$shoppingCart->isEmpty())
                     @foreach($shoppingCart as $shoppingCarts) 
                     <?php
                     $price = Session::get('priceItem');
@@ -64,11 +64,12 @@
                         <th></th>
                     </tr>
 
-                </table>
+                
                 <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
                 @endif
+            </table>
                         
             </div>
             <div class="shipping-address-container">
@@ -127,8 +128,8 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
     </script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
-    </script>
+    <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
+    </script> -->
 
     <script>
         function addQuantity(ISBN13){
@@ -304,6 +305,7 @@
                 console.log(error)
             });    
         }
+        
         function getCountry(){
             fetch('https://api.ipregistry.co/?key=tryout')
             .then(function (response) {

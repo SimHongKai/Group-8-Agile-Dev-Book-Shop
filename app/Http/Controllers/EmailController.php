@@ -11,12 +11,13 @@ use App\Models\Postage;
 class EmailController extends Controller
 {
 
-    public function sendOrderEmail(){
-        $this->sendEmail(2);
+    public function sendOrderEmail($orderID){
+        $emailBody = $this->composeEmailBody($orderID);
+        sendEmail($emailBody);
     }
 
     // ========== [ Compose Email ] ================
-    public function sendEmail($orderID) {
+    public function sendEmail($emailBody) {
         //require base_path("vendor/autoload.php");
         $mail = new PHPMailer();     // Passing `true` enables exceptions
  
@@ -37,22 +38,25 @@ class EmailController extends Controller
         $mail->isHTML(true);                // Set email content format to HTML
 
         $mail->Subject = "Order Receipt";
-        $mail->Body = $this->composeEmailBody($orderID);
+        $mail->Body = $emailBody;
                                 
 
         if( !$mail->send() ) {
-            return view('auth.login')->with("fail", "Email not sent.")->withErrors($mail->ErrorInfo);
+            return view('home')->with("fail", "Email not sent.")->withErrors($mail->ErrorInfo);
         }
         
         else {
-            return view('auth.registration')->with("success", "Email has been sent.");
+            return view('home')->with("success", "Email has been sent.");
         }
     }
 
     public function composeEmailBody($orderID){
+        // get order information
         $orderItemData = $this->getOrderItems($orderID);
-        $subTotal = 0;
-        $postage = 0;
+        $orderData = $this->getOrder($orderID);
+        $subTotal = $orderData->basePrice;
+        $postage = $orderData->postagePrice;
+
         $emailBody  = '<div class="container" style="padding: 1rem; background: #f5f5f5;">
                         <p>Thank You for making an order at our online book shop!</p>
                         <p>You have purchased the following items</p>
@@ -91,29 +95,20 @@ class EmailController extends Controller
 
     //should change the shopping cart to order item, $userID to orderID
 
-    public function getOrderItems($userID){
-        if($userID){
-            $shoppingCart = DB::table('shopping_cart')
-            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.retailPrice', 'stock.bookName')
-            ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
-            ->where('shopping_cart.userID', '=', $userID)
-            ->get();
-            $postage = Postage::get();
-            return $shoppingCart;
-        }
+    public function getOrderItems($orderID){
 
-        // if ($orderID){
-        //     $orderItem = DB::table('orderitem')
-        //     ->select('orderitem.qty', 'orderitem.ISBN13', 'stock.retailPrice', 'stock.bookName')
-        //     ->join('stock', 'orderitem.ISBN13', '=', 'stock.ISBN13')
-        //     ->where('orderitem.orderID', '=', $orderID)
-        //     ->get();
-        //     return $orderItem;
-        // }
+        if ($orderID){
+            $orderItem = DB::table('orderitem')
+            ->select('orderitem.qty', 'orderitem.ISBN13', 'stock.retailPrice', 'stock.bookName')
+            ->join('stock', 'orderitem.ISBN13', '=', 'stock.ISBN13')
+            ->where('orderitem.orderID', '=', $orderID)
+            ->get();
+            return $orderItem;
+        }
     }
 
-    // public function getOrder($orderID){
-    //     $order = Order::find($orderID);
-    //     return $order;
-    // }
+    public function getOrder($orderID){
+        $order = Order::find($orderID);
+        return $order;
+    }
 }

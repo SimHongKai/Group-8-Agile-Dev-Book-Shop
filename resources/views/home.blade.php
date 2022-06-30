@@ -19,6 +19,13 @@
             <h1><font face='Impact'>HOME PAGE</font></h1>
             
         <div class="container">
+            <!-- Print message that order was made -->
+            @if(Session::has('success'))
+            <div class="alert alert-success">{{Session::get('success')}}</div>
+            @endif
+            @if(Session::has('fail'))
+            <div class="alert alert-danger">{{Session::get('fail')}}</div>
+            @endif
             <div class="card2">
                 <ul>
                     @foreach ($stocks as $stock) 

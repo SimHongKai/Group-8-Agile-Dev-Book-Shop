@@ -61,6 +61,18 @@ class ShoppingCartController extends Controller
     }
 
     public function checkoutView(Request $request){
+        // set postage fee based on address
+        $postage = Postage::first();
+        if($request->Country == 'Malaysia') {
+            Session::put('postageBase', $postage->local_base); 
+            Session::put('postageIncrement', $postage->local_increment);
+        }
+        //if not Malaysia, set to international
+        else {
+            Session::put('postageBase', $postage->international_base);
+            Session::put('postageIncrement', $postage->international_increment);
+        }
+
         $insufficientStock = $this->adjustOutofStock();
         if(Session::has('userId')){
             $userID = Session::get('userId');
@@ -110,10 +122,10 @@ class ShoppingCartController extends Controller
             }
 
             else{
-                $newQty = $newQty + $StockCartValue;
+                $newQty = $newQty + $existingCartValue;
                 $itemRetailPrice = Stock::select('retailPrice')->Where('ISBN13',$shoppingCarts->ISBN13) ->get();
                 $itemRetailPrice = preg_replace('/[^0-9.]/','',$itemRetailPrice);
-                $newPrice = ($itemRetailPrice * $StockCartValue)+$newPrice;
+                $newPrice = ($itemRetailPrice * $existingCartValue)+$newPrice;
             }
         }
         

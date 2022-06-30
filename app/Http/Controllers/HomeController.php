@@ -248,6 +248,9 @@ class HomeController extends Controller
         // Validate Shipping Address Info
         $this->validateShippingAddress($request);
 
+        //Update Shippig Address Info to Session
+        $this->updateSessionShippingAddress($request);
+
         // Save User New Shipping Address
         $newAddress = User::where('id','=',$userId)->first();
         // Upload Shipping Address to Database
@@ -294,7 +297,6 @@ class HomeController extends Controller
         return $newQuantity;
     }
 
-
     public function calculateNewPriceMinus($itemPrice) {
         $initialPrice = Session::get('priceItem');
         $newPrice = $initialPrice-$itemPrice;
@@ -331,12 +333,20 @@ class HomeController extends Controller
         return true;
     }
 
+    public function updateSessionShippingAddress(Request $request){
+        Session::put('shippingCountry',$request->Country);
+        Session::put('shippingState',$request->State);
+        Session::put('shippingDistrict',$request->District);
+        Session::put('shippingPostcode',$request->Postal);
+        Session::put('shippingAddress',$request->Address);
+    }
+
     //------------------------------------------------------RETRIEVE SESSION DATA-----------------------------------------------------------
     public function getSessionUserId(){
         if(Session::has('userId')){
             $userId = Session::get('userId');
+            return $userId;
         }
-        return $userId;
     }
 
     //---------------------------------------------------VALIDATE FORM REQUESTS--------------------------------------------------------------
