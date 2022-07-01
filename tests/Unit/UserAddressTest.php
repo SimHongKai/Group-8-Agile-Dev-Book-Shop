@@ -2,13 +2,13 @@
 
 namespace Tests\Unit;
 
-use PHPUnit\Framework\TestCase;
+use Tests\TestCase;
 
 class UserAddressTest extends TestCase
 {
     /**
      * test for checking user Address
-     *
+     * SHK
      * @dataProvider validAddressProvider
      * @return void
      */
@@ -50,4 +50,5 @@ class UserAddressTest extends TestCase
           array(" ")
         );
     }
+    
 }
