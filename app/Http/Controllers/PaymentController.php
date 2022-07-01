@@ -193,7 +193,7 @@ class PaymentController extends Controller{
                                 
         // only redirect for failure, success is handled by payment function
         if( !$mail->send() ) {
-            return view('home')->with("fail", "Payment Succesfull, but Email was not sent.")->withErrors($mail->ErrorInfo);
+            return false;
         }
         
         // else {

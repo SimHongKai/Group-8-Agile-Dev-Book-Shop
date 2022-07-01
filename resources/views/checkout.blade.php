@@ -15,7 +15,6 @@
     @include('header')
     <div class="add-stock-container">
         <div id='add-stock-content'>
-            <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Checkout</font></h1>
                 
                 <!-- Display items removed from shopping cart due to insufficient stock -->
@@ -27,10 +26,21 @@
                         @endforeach
                     </div>
                 @endif
+                <table cellspacing="10">
+                    <tr>
+                        <td>
+                            <div>
+                                <br><a href ="shoppingCart"><button div id = 'returnButton'>Return to Shopping Cart</button></a></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br>
                 
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
+                        <th>Book Name</th>
                         <th>Price By Unit</th>
                         <th>Quantity</th>
                         <th>Total Price</th>
@@ -43,6 +53,7 @@
                     ?>
                     <tr id = "{{ $shoppingCarts->ISBN13}}Row">
                     <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <td>{{ $shoppingCarts -> bookName }}</td>
                         <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
                         <td>
@@ -64,11 +75,13 @@
                     ?>
                     <tr>
                         <th></th>
+                        <th></th>
                         <th>Total:</th>
                         <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
                         <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
                     </tr>
                     <tr>
+                        <th></th>
                         <th></th>
                         <th></th>
                         <th>Shipping Fees:</th>
@@ -77,31 +90,21 @@
                     <tr>
                         <th></th>
                         <th></th>
+                        <th></th>
                         <th>Total Price with Shipping Fees:</th>
                         <th><p id = "shippingPrice">RM<?php echo $shippingPrice ?></p></th>
                     </tr>
                 </table>
                 @endif
-                </div>
-                </div>
                 <table cellspacing="10">
                     <tr>
                         <td>
-                            </div>
-                                <br><a href ="shoppingCart"><button div id = 'returnButton'>Return to Shopping Cart</button></a></div>
-                            </div>
-                        </td>
-                        
-                        <td>
-                            </div>
-                                <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button></a>
-                            </div>
+                            <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button></a>
                         </td>
                     </tr>
                 </table>
-            </div>
-            @include('footer')
         </div>
+        @include('footer')
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">

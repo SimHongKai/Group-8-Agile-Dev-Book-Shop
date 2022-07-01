@@ -15,12 +15,12 @@
     @include('header')
     <div class="add-stock-container">
         <div id='add-stock-content'>
-            <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Shopping Cart</font></h1>
                 @if(!$shoppingCart->isEmpty())
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
+                        <th>Book Name</th>
                         <th>Price By Unit</th>
                         <th>Quantity</th>
                         <th>Total Price</th>
@@ -28,11 +28,12 @@
                     </tr>
                     @foreach($shoppingCart as $shoppingCarts) 
                     <?php
-                    $price = Session::get('priceItem');
-                    $itemCount = Session::get('numItem');
+                        $price = Session::get('priceItem');
+                        $itemCount = Session::get('numItem');
                     ?>
                     <tr id = "{{ $shoppingCarts->ISBN13}}Row">
-                    <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
+                        <td>{{ $shoppingCarts -> bookName }}</td>
                         <!-- Price per unit of the book -->
                         <td>{{ $shoppingCarts -> retailPrice }}</td>
                         <td>
@@ -58,25 +59,25 @@
                     ?>
                     <tr>
                         <th></th>
+                        <th></th>
                         <th>Total:</th>
                         <th><p id = "totalQty"><?php echo $itemCount ?></p> items</th>
                         <th><p id = "totalPrice">RM<?php echo $price ?></p></th>
                         <th></th>
                     </tr>
+                </table>
 
                 
                 <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
                 @endif
-            </table>
-                        
-            </div>
+                <br><br>
             <div class="shipping-address-container">
+            <form action="{{ route('checkout')}}" method="post" enctype="multipart/form-data">
             <div id='shipping-address-content'>
             <div class = 'shipping-address-form'>
                 <h1><font face='Impact'>Shipping Address</font></h1>
-                <form action="{{route('update-address')}}" method="post" enctype="multipart/form-data">
                     <!-- Print error message that address was NOT updated -->
                     @if(Session::has('success'))
                     <div class="alert alert-success">{{Session::get('success')}}</div>
@@ -114,18 +115,19 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <button class="btn btn-block btn-primary" type="submit">Save as Default</button>
+                        <button class="btn btn-block btn-primary" type="button" onclick="setDefaultAddress()">Save as Default</button>
                     </div>    
-                </form> 
+                
             </div>    
             </div>
+                <br><br><button class="btn btn-block btn-primary" type="submit">Place Order</button>
+            </form>
             </div>
-            <br><br><a href="{{ route('checkout')}}"><button class="btn btn-block btn-primary">Place Order</button></a>
+            
         </div>
             @include('footer')
-        </div>
     </div>
-
+    
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
     </script>
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript">
@@ -240,8 +242,6 @@
             totalPrice.innerHTML = "RM" + response.price;
             
             row.remove();
-
-            
         })
         .catch(function(error){
             console.log(error)
@@ -281,24 +281,9 @@
                     District.value = user.district;
                     Postal.value = user.postcode;
                     Address.value = user.address;
-                
-                    //if country is Malaysia, set to local
-                    if(user.country == 'Malaysia') {
-                        <?php 
-                            Session::put('postageBase', $postage[0]->local_base); 
-                            Session::put('postageIncrement', $postage[0]->local_increment);
-                        ?>
-                    }
-                    //if not Malaysia, set to international
-                    else {
-                        <?php
-                            Session::put('postageBase', $postage[0]->international_base);
-                            Session::put('postageIncrement', $postage[0]->international_increment);
-                        ?>
-                    }
 
                 }else{ // otherwise call API to get user country
-                getCountry();
+                    getCountry();
                 }
             })
             .catch(function(error){
@@ -313,17 +298,38 @@
             })
             .then(function (payload) {
                 document.getElementById("Country").value = payload.location.country.name;
-                //set to local just in case
-                <?php 
-                    Session::put('postageBase', $postage[0]->local_base); 
-                    Session::put('postageIncrement', $postage[0]->local_increment);
-                ?>
                 console.log(payload);
             })
             .catch(function(error){
                 console.log(error)
             });    
         } 
+
+        function setDefaultAddress(){
+            var country = document.getElementById('Country').value;
+            var state = document.getElementById('State').value;
+            var district = document.getElementById('District').value;
+            var postal = document.getElementById('Postal').value;
+            var address = document.getElementById('Address').value;
+
+            fetch("{{route('update-address')}}", {
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json, text-plain, */*",
+                "X-Requested-With": "XMLHttpRequest",
+                "X-CSRF-Token": $('meta[name="csrf_token"]').attr('content')
+            },
+            body: JSON.stringify({Country: country, State: state, District: district, Postal: postal, Address: address}),
+            method: 'post',
+            credentials: "same-origin",})
+            .then(function (response) {
+                window.alert("Your Default Address has been updated successfully!");
+                return response.json();
+            })
+            .catch(function(error){
+                console.log(error)
+            });    
+        }
     </script>
 </body>
 </html>

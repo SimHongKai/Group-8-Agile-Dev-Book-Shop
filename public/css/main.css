@@ -450,8 +450,9 @@ img.stock-details {
 .shopping-cart-table {
    font-family: Arial;
    border-collapse: collapse;
-   width: 500px;
+   width: 750px;
    padding:50px;
+   font: 14px Arial, Helvetica, sans-serif, bold;
    margin: 0 auto;
 }
 
