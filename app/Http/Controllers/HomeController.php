@@ -255,20 +255,19 @@ class HomeController extends Controller
         $newAddress = User::where('id','=',$userId)->first();
         // Upload Shipping Address to Database
         if($newAddress){
-        $newAddress->country = $request->Country;
-        $newAddress->State = $request->State;
-        $newAddress->district = $request->District;
-        $newAddress->postcode = $request->Postal;
-        $newAddress->address = $request->Address;
-        $res = $newAddress->save();
+            $newAddress->country = $request->Country;
+            $newAddress->State = $request->State;
+            $newAddress->district = $request->District;
+            $newAddress->postcode = $request->Postal;
+            $newAddress->address = $request->Address;
+            $res = $newAddress->save();
         }
         
         if($res){
-            return redirect('shoppingCart')->with('success', 'Address has been added successfully');
+            return true;
         }
-
         else{
-            return redirect('shoppingCart')->with('fail','Fail to Add Address');
+            return false;
         }
     }
     
@@ -427,5 +426,13 @@ class HomeController extends Controller
         }
         
         return null;
+    }
+
+    public function userAddressExists($address){
+        if (!empty(trim($address))){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
