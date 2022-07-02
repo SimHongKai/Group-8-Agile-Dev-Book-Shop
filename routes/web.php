@@ -37,6 +37,7 @@ Route::post('/checkout', [ShoppingCartController::class,'checkoutView'])->name('
 //Route::get('/home', [\App\Http\Controllers\HomeController::class,'loadNewCart'])->name('loadCart');
 
 //Route for Checkout
+Route::get('/checkout', [ShoppingCartController::class,'checkoutView'])->name('return-to-checkout');
 Route::get('/payment', [PaymentController::class, 'paymentView'])->name('payment');
 
 //Route for Payment

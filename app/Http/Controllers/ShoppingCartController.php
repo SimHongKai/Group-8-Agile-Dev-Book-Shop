@@ -35,7 +35,14 @@ class ShoppingCartController extends Controller
         }
 
         // SAVE THE ADDRESS AND RECEIPIENT AS SESSION HERE
-        
+        if(Session::has('userId')){
+            Session::put('recipientName',$request->RecipientName);
+            Session::put('shippingCountry',$request->Country);
+            Session::put('shippingState',$request->State);
+            Session::put('shippingDistrict',$request->District);
+            Session::put('shippingPostcode',$request->Postal);
+            Session::put('shippingAddress',$request->Address);
+        }
         //
 
         $insufficientStock = $this->adjustOutofStock();

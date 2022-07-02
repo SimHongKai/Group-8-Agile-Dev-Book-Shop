@@ -29,6 +29,7 @@
                 $postagePrice = Session::get('postagePrice');
                 $itemCount = Session::get('numItem');
             ?>
+            
             <h2>Paying For: <p id="totalPrice">RM<?php echo $price + $postagePrice?></p></h2><br><br>
             <div class="shipping-address-container">
             <div id='shipping-address-content'>
@@ -74,18 +75,22 @@
                     <tr>
                         <td>
                             </div>
-                                <br><a href ="{{ route('checkout')}}"><button div id = 'returnButton'>Return to Checkout Page</button></a></div>
-                            </div>
-                        </td>
-                        
-                        <td>
-                            </div>
                                 <br><a href="{{ route('submitpayment')}}"><button class="btn btn-block btn-primary" type="submit"><b>Confirm Order</b></button></a>
                             </div>
                         </td>
                     </tr>
                 </table>
             </form>
+            <table cellspacing="10">
+                    <tr>
+                        <td>
+                            <div>
+                                <br><a href ="{{ route('return-to-checkout')}}"><button div id = 'returnButton'>Return to Checkout Page</button></a></div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <br>
         </div>
         </div>
         </div>
