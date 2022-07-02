@@ -39,6 +39,7 @@ class HomeController extends Controller
                 else{
                     $this -> uploadDB($userID,$ISBN13);
                 }
+
             }
             
             else{
@@ -109,47 +110,6 @@ class HomeController extends Controller
             
             }
         }
-            
-    /*public function addQuantity(Request $request)
-    {
-        if(Session::has('userId')){
-            //Initial value
-            $initialPrice = Session::get('priceItem');
-            $initialItemCount = Session::get('numItem');
-            $userID = Session::get('userId');
-            // Get ISBN13
-            $ISBN13 = $request->bookISBN;
-
-            // Get stock data
-            $stock = Stock::find($ISBN13);
-
-            //Sum value
-            $newPrice = $initialPrice + $stock->retailPrice;
-            $newItemCount = $initialItemCount + 1;
-            $subtotalPrice = 0;
-            $subtotalQty = 0;
-
-            //Update session
-            $request->session() -> put('numItem',$newItemCount);
-            $request->session() -> put('priceItem',$newPrice);
-            
-            //Upload to database 
-            $existingValue = CartItem::select('qty')->where('userID',$userID) ->Where('ISBN13',$ISBN13) ->get();
-            $existingValue = preg_replace('/[^0-9]/','',$existingValue);
-            $updatedNumValue =$existingValue+1;
-
-            $subtotalPrice = $updatedNumValue * $stock->retailPrice;
-            $subtotalQty = $updatedNumValue;
-
-            CartItem::where('userID',$userID) ->Where('ISBN13',$ISBN13) -> update(['qty' => $updatedNumValue]);
-
-            // put cart data in array to be returned
-            $data = array('qty' => $newItemCount, 'price' => $newPrice, 'subtotalPrice' => $subtotalPrice, 'subtotalQty' => $subtotalQty);
-            $data = json_encode($data);
-            
-            return $data;
-        }
-    }*/
     
     //function to reduce quantity by 1 in the shopping cart
     public function minusQuantity(Request $request)
@@ -275,6 +235,43 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Add new shipping address
+     *
+     * @param  \App\Models\User  $user
+     * @return \Illuminate\Http\Response
+     */
+    public function updateShippingAddress(Request $request){
+        // Get Logged In User Id
+        $userId = $this->getSessionUserId();
+
+        // Validate Shipping Address Info
+        $this->validateShippingAddress($request);
+
+        //Update Shippig Address Info to Session
+        $this->updateSessionShippingAddress($request);
+
+        // Save User New Shipping Address
+        $newAddress = User::where('id','=',$userId)->first();
+        // Upload Shipping Address to Database
+        if($newAddress){
+            $newAddress->country = $request->Country;
+            $newAddress->State = $request->State;
+            $newAddress->district = $request->District;
+            $newAddress->postcode = $request->Postal;
+            $newAddress->address = $request->Address;
+            $res = $newAddress->save();
+        }
+        
+        if($res){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+    
+
     //------------------------------------------------------------LOGGED IN------------------------------------------------------------
     public function isLoggedIn($newItemCount,$newPrice,$loggedIn){
         $data = array('qty' => $newItemCount, 'price' => $newPrice, 'login' => $loggedIn);
@@ -335,6 +332,33 @@ class HomeController extends Controller
         return true;
     }
 
+    public function updateSessionShippingAddress(Request $request){
+        Session::put('shippingCountry',$request->Country);
+        Session::put('shippingState',$request->State);
+        Session::put('shippingDistrict',$request->District);
+        Session::put('shippingPostcode',$request->Postal);
+        Session::put('shippingAddress',$request->Address);
+    }
+
+    //------------------------------------------------------RETRIEVE SESSION DATA-----------------------------------------------------------
+    public function getSessionUserId(){
+        if(Session::has('userId')){
+            $userId = Session::get('userId');
+            return $userId;
+        }
+    }
+
+    //---------------------------------------------------VALIDATE FORM REQUESTS--------------------------------------------------------------
+    public function validateShippingAddress(Request $request){
+        $request->validate([
+            'Country' => 'required|min:0|max:100|',
+            'State' =>  'required|min:0|max:100|',
+            'District' => 'required|min:0|max:100|',
+            'Postal' => 'required|min:3|max:50|',
+            'Address' => 'required|min:0|max:200|',
+        ]);
+    }
+
     //-----------------------------------------------------CHECK BOOK EXIST FOR USER-------------------------------------------------------
     public function checkExist($userID,$ISBN13){
         if(CartItem::where('userID',$userID)->where('ISBN13',$ISBN13)->exists()){
@@ -383,7 +407,7 @@ class HomeController extends Controller
         if(Session::has('userId')){
             $userID = Session::get('userId');
             $shoppingCart = DB::table('shopping_cart')
-            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.retailPrice')
+            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.bookName', 'stock.retailPrice')
             ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
             ->where('shopping_cart.userID', '=', $userID)
             ->get();
@@ -402,5 +426,13 @@ class HomeController extends Controller
         }
         
         return null;
+    }
+
+    public function userAddressExists($address){
+        if (!empty(trim($address))){
+            return true;
+        }else{
+            return false;
+        }
     }
 }
