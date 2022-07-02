@@ -11,38 +11,6 @@ use DB;
 
 class ShoppingCartController extends Controller
 {
-    /**
-     * Add new shipping address
-     *
-     * @param  \App\Models\User  $user
-     * @return \Illuminate\Http\Response
-     */
-    public function updateShippingAddress(Request $request){
-        // Get Logged In User Id
-        $userId = $this->getSessionUserId();
-
-        // Validate Shipping Address Info
-        $this->validateShippingAddress($request);
-
-        // Save User New Shipping Address
-        $newAddress = User::where('id','=',$userId)->first();
-        // Upload Shipping Address to Database
-        $newAddress->country = $request->Country;
-        $newAddress->State = $request->State;
-        $newAddress->district = $request->District;
-        $newAddress->postcode = $request->Postal;
-        $newAddress->address = $request->Address;
-        $res = $newAddress->save();
-        
-        if($res){
-            return redirect('shoppingCart')->with('success', 'Address has been added successfully');
-        }
-
-        else{
-            return redirect('shoppingCart')->with('fail','Fail to Add Address');
-        }
-    }
-
     protected function getSessionUserId(){
         if(Session::has('userId')){
             $userId = Session::get('userId');
@@ -50,17 +18,27 @@ class ShoppingCartController extends Controller
         return $userId;
     }
 
-    protected function validateShippingAddress(Request $request){
-        $request->validate([
-            'Country' => 'required|min:0|max:100|',
-            'State' =>  'required|min:0|max:100|',
-            'District' => 'required|min:0|max:100|',
-            'Postal' => 'required|min:3|max:50|',
-            'Address' => 'required|min:0|max:200|',
-        ]);
-    }
-
     public function checkoutView(Request $request){
+        if(Session::get('numItem') == 0) {
+            return redirect('home');
+        }
+        // set postage fee based on address
+        $postage = Postage::first();
+        if($request->Country == 'Malaysia') {
+            Session::put('postageBase', $postage->local_base); 
+            Session::put('postageIncrement', $postage->local_increment);
+        }
+        //if not Malaysia, set to international
+        else {
+            Session::put('postageBase', $postage->international_base);
+            Session::put('postageIncrement', $postage->international_increment);
+        }
+
+        // SAVE THE ADDRESS AND RECEIPIENT AS SESSION HERE
+        //
+        //
+        //
+
         $insufficientStock = $this->adjustOutofStock();
         if(Session::has('userId')){
             $userID = Session::get('userId');
@@ -127,5 +105,47 @@ class ShoppingCartController extends Controller
         $data = array('qty' => $newItemCount, 'price' => $newPrice, 'login' => $loggedIn);
         return $data;
     }
+
+    // /**
+    //  * Add new shipping address
+    //  *
+    //  * @param  \App\Models\User  $user
+    //  * @return \Illuminate\Http\Response
+    //  */
+    // public function updateShippingAddress(Request $request){
+    //     // Get Logged In User Id
+    //     $userId = $this->getSessionUserId();
+
+    //     // Validate Shipping Address Info
+    //     $this->validateShippingAddress($request);
+
+    //     // Save User New Shipping Address
+    //     $newAddress = User::where('id','=',$userId)->first();
+    //     // Upload Shipping Address to Database
+    //     $newAddress->country = $request->Country;
+    //     $newAddress->State = $request->State;
+    //     $newAddress->district = $request->District;
+    //     $newAddress->postcode = $request->Postal;
+    //     $newAddress->address = $request->Address;
+    //     $res = $newAddress->save();
+        
+    //     if($res){
+    //         return redirect('shoppingCart')->with('success', 'Address has been added successfully');
+    //     }
+
+    //     else{
+    //         return redirect('shoppingCart')->with('fail','Fail to Add Address');
+    //     }
+    // }
+
+    // protected function validateShippingAddress(Request $request){
+    //     $request->validate([
+    //         'Country' => 'required|min:0|max:100|',
+    //         'State' =>  'required|min:0|max:100|',
+    //         'District' => 'required|min:0|max:100|',
+    //         'Postal' => 'required|min:3|max:50|',
+    //         'Address' => 'required|min:0|max:200|',
+    //     ]);
+    // }
 }
 ?>

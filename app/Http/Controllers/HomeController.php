@@ -248,24 +248,26 @@ class HomeController extends Controller
         // Validate Shipping Address Info
         $this->validateShippingAddress($request);
 
+        //Update Shippig Address Info to Session
+        $this->updateSessionShippingAddress($request);
+
         // Save User New Shipping Address
         $newAddress = User::where('id','=',$userId)->first();
         // Upload Shipping Address to Database
         if($newAddress){
-        $newAddress->country = $request->Country;
-        $newAddress->State = $request->State;
-        $newAddress->district = $request->District;
-        $newAddress->postcode = $request->Postal;
-        $newAddress->address = $request->Address;
-        $res = $newAddress->save();
+            $newAddress->country = $request->Country;
+            $newAddress->State = $request->State;
+            $newAddress->district = $request->District;
+            $newAddress->postcode = $request->Postal;
+            $newAddress->address = $request->Address;
+            $res = $newAddress->save();
         }
         
         if($res){
-            return redirect('shoppingCart')->with('success', 'Address has been added successfully');
+            return true;
         }
-
         else{
-            return redirect('shoppingCart')->with('fail','Fail to Add Address');
+            return false;
         }
     }
     
@@ -293,7 +295,6 @@ class HomeController extends Controller
         $newQuantity=$initialItemCount+1;
         return $newQuantity;
     }
-
 
     public function calculateNewPriceMinus($itemPrice) {
         $initialPrice = Session::get('priceItem');
@@ -331,12 +332,20 @@ class HomeController extends Controller
         return true;
     }
 
+    public function updateSessionShippingAddress(Request $request){
+        Session::put('shippingCountry',$request->Country);
+        Session::put('shippingState',$request->State);
+        Session::put('shippingDistrict',$request->District);
+        Session::put('shippingPostcode',$request->Postal);
+        Session::put('shippingAddress',$request->Address);
+    }
+
     //------------------------------------------------------RETRIEVE SESSION DATA-----------------------------------------------------------
     public function getSessionUserId(){
         if(Session::has('userId')){
             $userId = Session::get('userId');
+            return $userId;
         }
-        return $userId;
     }
 
     //---------------------------------------------------VALIDATE FORM REQUESTS--------------------------------------------------------------
@@ -398,7 +407,7 @@ class HomeController extends Controller
         if(Session::has('userId')){
             $userID = Session::get('userId');
             $shoppingCart = DB::table('shopping_cart')
-            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.retailPrice')
+            ->select('shopping_cart.qty', 'shopping_cart.ISBN13', 'shopping_cart.userID', 'stock.coverImg', 'stock.bookName', 'stock.retailPrice')
             ->join('stock', 'shopping_cart.ISBN13', '=', 'stock.ISBN13')
             ->where('shopping_cart.userID', '=', $userID)
             ->get();
@@ -417,5 +426,13 @@ class HomeController extends Controller
         }
         
         return null;
+    }
+
+    public function userAddressExists($address){
+        if (!empty(trim($address))){
+            return true;
+        }else{
+            return false;
+        }
     }
 }

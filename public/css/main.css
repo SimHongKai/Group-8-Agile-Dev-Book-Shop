@@ -446,11 +446,13 @@ img.stock-details {
 ::placeholder{
    font-size: small;
 }
+
 .shopping-cart-table {
    font-family: Arial;
    border-collapse: collapse;
-   width: 500px;
+   width: 750px;
    padding:50px;
+   font: 14px Arial, Helvetica, sans-serif, bold;
    margin: 0 auto;
 }
 
@@ -474,4 +476,13 @@ img.stock-details {
 
 .shopping-cart-table p {
    display:inline;
+}
+
+.form-group .col-md-2{
+   padding-left: 0;
+   padding-right: 0;
+}
+
+.form-row .col-2 input{ 
+   width:fit-content;
 }
