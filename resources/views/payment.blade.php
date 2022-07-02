@@ -49,22 +49,26 @@
                 <div class="col-4">
                 <input id="cardnumber" name="cardnumber" type="tel" inputmode="numeric" autocomplete="cc-number" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" class="form-control" 
                     required="required" value="{{old('cardnumber')}}"><br>
+                    <span class="text-danger">@error('cardnumber') {{$message}} @enderror</span>
                 </div>
                 <label for="recipientname" class="col-4 col-form-label">Name on Card</label>
                 <div class="col-4">
                     <input id="recipientname" name="recipientname" placeholder="Eg: John Smith" type="text" class="form-control" 
                     required="required" value="{{old('recipientname')}}"><br>
+                    <span class="text-danger">@error('recipientname') {{$message}} @enderror</span>
                 </div>
                 <div class="col-2">
                     <label for="expiredate" class="col-4 col-form-label">Expiry Date: </label>
                     <input id="expirydate" name="expirydate" placeholder="MM/YY" type="text" class="form-control" 
                     required="required" size="5" maxlength="5" value="{{old('expirydate')}}"><br>
+                    <span class="text-danger">@error('expirydate') {{$message}} @enderror</span>
                 </div>
                     <div class="col-2">
                     <label for="ccv">CVV: </label>
                     <input id="cvv" name="cvv" size="3" placeholder="123" type="password" class="form-control" 
                     required="required" value="{{old('cvv')}}"><br>
                     </div>
+                    <span class="text-danger">@error('cvv') {{$message}} @enderror</span>
                 </div>
                 <table cellspacing="10">
                     <tr>
