@@ -48,6 +48,7 @@ class PaymentController extends Controller{
             $this->paymentFormValidation($requests);
             $shippingAddress = $this->getSessionShippingAddress();
             isset($shippingAddress['country']);
+            //put into Orders
             $newOrder = new Orders();
             $newOrder->userID = $userId;
             $newOrder->basePrice = $this->getBasePrice();
@@ -64,20 +65,21 @@ class PaymentController extends Controller{
 
             if($res && $orderId){
                 $cartItem = CartItem::where('userID','=',$userId)->get();
+                //put into order items
                 foreach($cartItem as $cartItems){
                     $orderItem = new OrderItem();
                     $orderItem->orderID = $orderId[0];
                     $orderItem->ISBN13 = $cartItems->ISBN13;
                     $orderItem->qty = $cartItems->qty;
                     $saveitems = $orderItem->save();
-                    
+                    //reduce stock
                     if($saveitems){
                         $minusStock = Stock::where('ISBN13','=',$cartItems->ISBN13)->first();
                         $minusStock->qty = $minusStock->qty - $cartItems->qty;
                         $newRes = $minusStock->save();
                     }
                 }
-                    
+                // clear shopping cart
                 $clearCart = CartItem::where('userID','=',$userId)->delete();
                 if($clearCart){
                     $this->resetSessionCartData();
@@ -87,6 +89,7 @@ class PaymentController extends Controller{
                 }
                 else{
                     return redirect("home")->with('fail','Fail to process payment. Please try again');
+                    //return back()->with('fail','Fail to process payment. Please try again');
                 }
             }
             else{
