@@ -37,7 +37,11 @@ class HomeController extends Controller
                 }
                 //Upload to database
                 else{
-                    $this -> uploadDB($userID,$ISBN13);
+                    $cartItem = new CartItem();
+                    $cartItem->userID = $userID;
+                    $cartItem->ISBN13 = $ISBN13;
+                    $cartItem->qty = 1;
+                    $this -> uploadDB($cartItem);
                 }
 
             }
@@ -394,12 +398,11 @@ class HomeController extends Controller
     }*/
 
     //-----------------------------------------------------UPLOAD DATABASE-------------------------------------------------------
-    public function uploadDB($userID,$ISBN13){
-        $cartItem = new CartItem();
-        $cartItem->userID = $userID;
-        $cartItem->ISBN13 = $ISBN13;
-        $cartItem->qty = 1;
+    public function uploadDB($cartItem){
         $res = $cartItem->save();
+        if($res){
+            return TRUE;
+        }
     }
 
     //-----------------------------------------------------OTHER PAGES-------------------------------------------------------

@@ -12,28 +12,12 @@ use DB;
 
 class CustomAuthController extends Controller
 {
-    
-
-    //Function to go sign in page
-    public function login(){
-        return view ("auth.login");
-    }
-
-    //Function to go sign up page
-    public function registration(){
-        return view ("auth.registration");
-    }
-
     //Function to sign up user
     public function registerUser(Request $request)
     {
         //validate before storing to database
-        $request->validate([
-            'userName'=>'required|min:0|max:255|',
-            'userEmail' => 'required|email|unique:users|min:0|max:255|',
-            'userPassword' => 'required|min:8|max:255|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
-            'privilige'=>'required|regex:/[0-9]/|gt:0|lt:3'
-        ]);
+        $this->signUpValidate($request);
+        
         //Create new object and store to database
         $user = new User();
         $user->userName = $request->userName;
@@ -45,10 +29,10 @@ class CustomAuthController extends Controller
         $user->district = "";
         $user->postcode = 0;
         $user->address = "";
-        $res = $user->save();
+        $res = $this->signUpFunction($user);
         
         if($res){
-            return back() ->with('success','You have registered successfully');
+            return redirect('home')->with('success','You have registered successfully');
         }
 
         else{
@@ -65,30 +49,33 @@ class CustomAuthController extends Controller
             'userEmail'=>'required|email|min:0|max:255|',
             'userPassword' => 'required|min:8|max:255|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
         ]);
-        //Compare to database
-        $user = User::where('userEmail','=',$request->userEmail)->first();
-        if($user){
-            if(Hash::check($request->userPassword, $user->userPassword)){
+        $email = $request->userEmail;
+        $user = User::where('userEmail','=',$email)->first();
+        
+        $dbpassword = $user->userPassword;
+        $typepassword = $request->userPassword;
+        $userStatus = $this -> signInUserFoundFunction($email);
+
+        if($userStatus){
+            $passwordStatus = $this -> signInPassValidateFunction($typepassword, $dbpassword);
+            if($passwordStatus){
                 $userID = $user->id;
-                $request->session() -> put('userId', $userID);
-                $request->session() -> put('userPrivilige',$user->userPrivilige);
-                
-                //Update Number of items
-                $userID = $user->id;
+                $userPriv = $user->userPrivilige;
                 $itemAmount = CartItem::where('userID',$userID) -> sum('qty');
-                $request->session() -> put('numItem',$itemAmount);
-                
+
                 //Update Price
                 $sumTotal = DB::table('shopping_cart')
                 ->join('stock','shopping_cart.ISBN13',"=",'stock.ISBN13')
                 ->where('userID',$userID)
                 ->selectRaw('SUM(stock.retailPrice * shopping_cart.qty) as total')
                 ->get();
+
                 $sumTotal = preg_replace('/[^0-9.]/','',$sumTotal);
                 if($sumTotal==null){
                     $sumTotal = 0;
                 }
-                $request->session() -> put('priceItem',$sumTotal);
+
+                $this -> updateSessionSignIn($userID,$userPriv,$itemAmount,$sumTotal);
                 
                 return redirect('home');
             }
@@ -98,6 +85,42 @@ class CustomAuthController extends Controller
         }
         else{
             return back()->with('fail','This User Email is not registered');
+        }
+    }
+
+    public function signUpValidate(Request $request){
+        $request->validate([
+            'userName'=>'required|min:0|max:255|',
+            'userEmail' => 'required|email|unique:users|min:0|max:255|',
+            'userPassword' => 'required|min:8|max:255|regex:/[a-z]/|regex:/[A-Z]/|regex:/[0-9]/|regex:/[@$!_%*#?&]/',
+            'privilige'=>'required|regex:/[0-9]/|gt:0|lt:3'
+        ]);
+    }
+
+    public function signUpFunction($user){
+        $res = $user->save();
+        if($res){
+            return TRUE;
+        }
+    }
+
+    public function signInUserFoundFunction($email){
+        $user = User::where('userEmail','=',$email)->first();
+
+        if($user){
+            return $user;
+        }
+        else{
+            return FALSE;
+        }
+    }
+
+    public function signInPassValidateFunction($typepassword, $dbpassword){
+        if(Hash::check($typepassword, $dbpassword)){
+            return TRUE;
+        }
+        else{
+            return FALSE;
         }
     }
 
@@ -116,5 +139,21 @@ class CustomAuthController extends Controller
         }
     }
 
-    
+    public function updateSessionSignIn($userID,$userPriv,$itemAmount,$sumTotal){
+        Session::put('userId',$userID);
+        Session::put('userPrivilige',$userPriv);
+        Session::put('numItem',$itemAmount);
+        Session::put('priceItem',$sumTotal);
+    }
+
+    //Function to go sign in page
+    public function login(){
+        return view ("auth.login");
+    }
+
+    //Function to go sign up page
+    public function registration(){
+        return view ("auth.registration");
+    }
+
 }
