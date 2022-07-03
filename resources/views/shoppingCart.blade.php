@@ -87,6 +87,11 @@
                     @endif
                     @csrf
                     <div class="form-group row">
+                        <label for="RecipientName" class="col-4 col-form-label">Recipient Name</label>
+                        <div class="col-8">
+                            <input id="RecipientName" name="RecipientName" placeholder="Name" type="text" class="form-control"
+                            required="required" value="{{old('RecipientName')}}"><br>
+                        </div>
                         <label for="Country" class="col-4 col-form-label">Country</label> 
                         <div class="col-8">
                             <input id="Country" name="Country" placeholder="Country" type="text" class="form-control" 
