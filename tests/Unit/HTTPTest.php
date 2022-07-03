@@ -32,10 +32,10 @@ class HTTPTest extends TestCase
         $response->assertViewHas('stocks');
     }
 
-    public function test_users_table(){
-        $this->assertDatabaseHas('users', [
-            'username' => 'testname'
-        ]);
-    }
+    // public function test_users_table(){
+    //     $this->assertDatabaseHas('users', [
+    //         'username' => 'testname'
+    //     ]);
+    // }
 
 }
