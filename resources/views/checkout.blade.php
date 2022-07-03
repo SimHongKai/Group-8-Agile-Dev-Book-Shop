@@ -30,7 +30,7 @@
                     <tr>
                         <td>
                             <div>
-                                <br><a href ="shoppingCart"><button div id = 'returnButton'>Return to Shopping Cart</button></a></div>
+                                <br><a href ="shoppingCart"><button div id = 'returnButton' onclick="return confirm('Are you sure you want to return to shopping cart?')">Return to Shopping Cart</button></a></div>
                             </div>
                         </td>
                     </tr>
@@ -99,7 +99,7 @@
                 <table cellspacing="10">
                     <tr>
                         <td>
-                            <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" type="submit"><b>Pay Now</b></button></a>
+                            <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" onclick="return confirm('Continue to payment?')" type="submit"><b>Pay Now</b></button></a>
                         </td>
                     </tr>
                 </table>

@@ -29,7 +29,6 @@
                 $postagePrice = Session::get('postagePrice');
                 $itemCount = Session::get('numItem');
             ?>
-            
             <h2>Paying For: <p id="totalPrice">RM<?php echo $price + $postagePrice?></p></h2><br><br>
             <div class="shipping-address-container">
             <div id='shipping-address-content'>
