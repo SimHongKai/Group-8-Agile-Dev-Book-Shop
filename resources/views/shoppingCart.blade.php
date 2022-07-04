@@ -66,8 +66,6 @@
                         <th></th>
                     </tr>
                 </table>
-
-                
                 <!-- If no entries are found in the database, display this-->
                 @else
                     <p>No items in the shopping cart</p>
@@ -303,6 +301,11 @@
             })
             .then(function (payload) {
                 document.getElementById("Country").value = payload.location.country.name;
+                //set to local just in case
+                <?php 
+                    Session::put('postageBase', $postage[0]->local_base); 
+                    Session::put('postageIncrement', $postage[0]->local_increment);
+                ?>
                 console.log(payload);
             })
             .catch(function(error){
