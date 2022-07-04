@@ -1,22 +1,22 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" content="<?php echo e(csrf_token()); ?>">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Shopping Cart</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/bootstrap.css')); ?>"> 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
 </head>
 
 <body>
-    @include('header')
+    <?php echo $__env->make('header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="add-stock-container">
         <div id='add-stock-content'>
                 <h1><font face='Impact'>Shopping Cart</font></h1>
-                @if(!$shoppingCart->isEmpty())
+                <?php if(!$shoppingCart->isEmpty()): ?>
                 <table class = "shopping-cart-table">
                     <tr>
                         <th>Book</th>
@@ -26,32 +26,32 @@
                         <th>Total Price</th>
                         <th>Remove</th>
                     </tr>
-                    @foreach($shoppingCart as $shoppingCarts) 
+                    <?php $__currentLoopData = $shoppingCart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $shoppingCarts): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> 
                     <?php
                         $price = Session::get('priceItem');
                         $itemCount = Session::get('numItem');
                     ?>
-                    <tr id = "{{ $shoppingCarts->ISBN13}}Row">
-                        <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
-                        <td>{{ $shoppingCarts -> bookName }}</td>
+                    <tr id = "<?php echo e($shoppingCarts->ISBN13); ?>Row">
+                        <td><img src="<?php echo e(asset('book_covers')); ?>/<?php echo e($shoppingCarts->coverImg); ?>" width="150px" height="200px"></td>
+                        <td><?php echo e($shoppingCarts -> bookName); ?></td>
                         <!-- Price per unit of the book -->
-                        <td>{{ $shoppingCarts -> retailPrice }}</td>
+                        <td><?php echo e($shoppingCarts -> retailPrice); ?></td>
                         <td>
                             <!--Add quantity-->
-                            <a onclick="addQuantity({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/add_image.png') }}" width="20px" height="20px"></a>
+                            <a onclick="addQuantity(<?php echo e($shoppingCarts->ISBN13); ?>)"><img src="<?php echo e(asset('images/add_image.png')); ?>" width="20px" height="20px"></a>
                             <!--Current quantity-->
-                            <p id ="{{ $shoppingCarts->ISBN13}}Qty">{{ $shoppingCarts -> qty }}</p>
+                            <p id ="<?php echo e($shoppingCarts->ISBN13); ?>Qty"><?php echo e($shoppingCarts -> qty); ?></p>
                             <!--Minus quantity-->
-                            <a onclick="minusQuantity({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/minus_image.png') }}"width="20px" height="20px"> </a>
+                            <a onclick="minusQuantity(<?php echo e($shoppingCarts->ISBN13); ?>)"><img src="<?php echo e(asset('images/minus_image.png')); ?>"width="20px" height="20px"> </a>
                         </td>
                         <!-- Total price of the book -->
-                        <td id = "{{ $shoppingCarts->ISBN13}}Price"><p>RM{{ $shoppingCarts -> retailPrice * $shoppingCarts -> qty }}</p></td>
+                        <td id = "<?php echo e($shoppingCarts->ISBN13); ?>Price"><p>RM<?php echo e($shoppingCarts -> retailPrice * $shoppingCarts -> qty); ?></p></td>
                         <!-- Remove button -->
                         <td>
-                            <a onclick="removeEntry({{ $shoppingCarts->ISBN13 }})"><img src="{{ asset('images/remove_button.jpg') }}"width="40px" height="40px"> </a> 
+                            <a onclick="removeEntry(<?php echo e($shoppingCarts->ISBN13); ?>)"><img src="<?php echo e(asset('images/remove_button.jpg')); ?>"width="40px" height="40px"> </a> 
                         </td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <!-- Retrieve item quantity and total price-->
                     <?php
                     $price = Session::get('priceItem');
@@ -66,55 +66,64 @@
                         <th></th>
                     </tr>
                 </table>
+
+                
                 <!-- If no entries are found in the database, display this-->
-                @else
+                <?php else: ?>
                     <p>No items in the shopping cart</p>
-                @endif
+                <?php endif; ?>
                 <br><br>
             <div class="shipping-address-container">
-            <form action="{{ route('checkout')}}" method="post" enctype="multipart/form-data">
+            <form action="<?php echo e(route('checkout')); ?>" method="post" enctype="multipart/form-data">
             <div id='shipping-address-content'>
             <div class = 'shipping-address-form'>
                 <h1><font face='Impact'>Shipping Address</font></h1>
                     <!-- Print error message that address was NOT updated -->
-                    @if(Session::has('success'))
-                    <div class="alert alert-success">{{Session::get('success')}}</div>
-                    @endif
-                    @if(Session::has('fail'))
-                    <div class="alert alert-danger">{{Session::get('fail')}}</div>
-                    @endif
-                    @csrf
+                    <?php if(Session::has('success')): ?>
+                    <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
+                    <?php endif; ?>
+                    <?php if(Session::has('fail')): ?>
+                    <div class="alert alert-danger"><?php echo e(Session::get('fail')); ?></div>
+                    <?php endif; ?>
+                    <?php echo csrf_field(); ?>
                     <div class="form-group row">
                         <label for="RecipientName" class="col-4 col-form-label">Recipient Name</label>
                         <div class="col-8">
                             <input id="RecipientName" name="RecipientName" placeholder="Name" type="text" class="form-control"
-                            required="required" value="{{old('RecipientName')}}"><br>
+                            required="required" value="<?php echo e(old('RecipientName')); ?>"><br>
                         </div>
                         <label for="Country" class="col-4 col-form-label">Country</label> 
                         <div class="col-8">
                             <input id="Country" name="Country" placeholder="Country" type="text" class="form-control" 
-                            required="required" value="{{old('Country')}}"><br>
-                            <span class="text-danger">@error('Country') {{$message}} @enderror</span>
+                            required="required" value="<?php echo e(old('Country')); ?>"><br>
+                            <span class="text-danger"><?php $__errorArgs = ['Country'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                         <label for="State" class="col-4 col-form-label">State</label>
                         <div class="col-8">
                             <input id="State" name="State" placeholder="State" type="text" class="form-control" 
-                            required="required" value="{{old('State')}}"><br>
+                            required="required" value="<?php echo e(old('State')); ?>"><br>
                         </div>
                         <label for="District" class="col-4 col-form-label">District</label>
                         <div class="col-8">
                             <input id="District" name="District" placeholder="District" type="text" class="form-control" 
-                            required="required" value="{{old('District')}}"><br>
+                            required="required" value="<?php echo e(old('District')); ?>"><br>
                         </div>
                         <label for="Postal" class="col-4 col-form-label">Postal</label>
                         <div class="col-8">
                             <input id="Postal" name="Postal" placeholder="Postal Code" type="text" class="form-control" 
-                            required="required" value="{{old('Postal')}}"><br>
+                            required="required" value="<?php echo e(old('Postal')); ?>"><br>
                         </div>
                         <label for="Address" class="col-4 col-form-label">Address</label>
                         <div class="col-8">
                             <input id="Address" name="Address" placeholder="Address" type="text" class="form-control" 
-                            required="required" value="{{old('Address')}}">
+                            required="required" value="<?php echo e(old('Address')); ?>">
                         </div>
                     </div>
                     <div class="form-group">
@@ -128,7 +137,7 @@
             </div>
             
         </div>
-            @include('footer')
+            <?php echo $__env->make('footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </div>
     
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
@@ -301,11 +310,6 @@
             })
             .then(function (payload) {
                 document.getElementById("Country").value = payload.location.country.name;
-                //set to local just in case
-                <?php 
-                    Session::put('postageBase', $postage[0]->local_base); 
-                    Session::put('postageIncrement', $postage[0]->local_increment);
-                ?>
                 console.log(payload);
             })
             .catch(function(error){
@@ -320,7 +324,7 @@
             var postal = document.getElementById('Postal').value;
             var address = document.getElementById('Address').value;
 
-            fetch("{{route('update-address')}}", {
+            fetch("<?php echo e(route('update-address')); ?>", {
             headers: {
                 "Content-Type": "application/json",
                 "Accept": "application/json, text-plain, */*",
@@ -340,4 +344,4 @@
         }
     </script>
 </body>
-</html>
+</html><?php /**PATH C:\HongKai\Software\xampp\htdocs\Book_Shop\resources\views/shoppingCart.blade.php ENDPATH**/ ?>

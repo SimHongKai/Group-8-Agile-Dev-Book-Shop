@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" content="<?php echo e(csrf_token()); ?>">
 
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Home Page</title>
@@ -13,47 +13,47 @@
 </head>
 
 <body>
-    @include('header')
+    <?php echo $__env->make('header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="container">
         <div id='content'>
             <h1><font face='Impact'>HOME PAGE</font></h1>
             
         <div class="container">
             <!-- Print message that order was made -->
-            @if(Session::has('success'))
-            <div class="alert alert-success">{{Session::get('success')}}</div>
-            @endif
-            @if(Session::has('fail'))
-            <div class="alert alert-danger">{{Session::get('fail')}}</div>
-            @endif
+            <?php if(Session::has('success')): ?>
+            <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
+            <?php endif; ?>
+            <?php if(Session::has('fail')): ?>
+            <div class="alert alert-danger"><?php echo e(Session::get('fail')); ?></div>
+            <?php endif; ?>
             <div class="card2">
                 <ul>
-                    @foreach ($stocks as $stock) 
+                    <?php $__currentLoopData = $stocks; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $stock): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> 
                         <li>
-                        <a href = "{{ route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
-                            <img class="card-img-top" src="{{ asset('book_covers')}}/{{$stock->coverImg }}"/></a><br>
-                        <a href = "{{ route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ]) }}">
-                                <h5>{{ $stock->bookName }}</h5></a><br>
+                        <a href = "<?php echo e(route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ])); ?>">
+                            <img class="card-img-top" src="<?php echo e(asset('book_covers')); ?>/<?php echo e($stock->coverImg); ?>"/></a><br>
+                        <a href = "<?php echo e(route('bookDetails', [ 'ISBN13'=> $stock->ISBN13 ])); ?>">
+                                <h5><?php echo e($stock->bookName); ?></h5></a><br>
 
-                                <h5>Price: RM{{ $stock->retailPrice }}</h4><br>
-                                @if (session()->get('userPrivilige') == 2)
-                                @elseif ($stock->qty > 0)
-                                <h5>Current Stock: {{ $stock->qty}}</h5><br>
+                                <h5>Price: RM<?php echo e($stock->retailPrice); ?></h4><br>
+                                <?php if(session()->get('userPrivilige') == 2): ?>
+                                <?php elseif($stock->qty > 0): ?>
+                                <h5>Current Stock: <?php echo e($stock->qty); ?></h5><br>
                                 <div id="home-button">
-                                    <button name="addButton" onclick="addItemToCart({{ $stock->ISBN13 }})" 
+                                    <button name="addButton" onclick="addItemToCart(<?php echo e($stock->ISBN13); ?>)" 
                                     class="btn btn-info">Add to Cart</button>
                                 </div>
-                                @else
+                                <?php else: ?>
                                 <span class="home-text-details" style="background-color: red">OUT OF STOCK</span>
-                                @endif
+                                <?php endif; ?>
                         </li>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                 </ul>
                 </div>
             </div>
         </div>
     <div>
-    @include('footer')
+    <?php echo $__env->make('footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
 </body>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" 
@@ -86,7 +86,7 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
             cartPrice.innerHTML = "RM"+ response.price;
         }
         else{
-            window.location.href = "{{ route('LoginUser') }}";
+            window.location.href = "<?php echo e(route('LoginUser')); ?>";
         }
     })
     .catch(function(error){
@@ -97,3 +97,4 @@ integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+
 </script>
 </html>
 
+<?php /**PATH C:\HongKai\Software\xampp\htdocs\Book_Shop\resources\views/home.blade.php ENDPATH**/ ?>

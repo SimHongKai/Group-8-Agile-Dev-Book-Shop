@@ -1,98 +1,154 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
     <title>Add Stocks</title>
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/bootstrap.css')); ?>"> 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
 </head>
 
 <body>
-    @include('header')
+    <?php echo $__env->make('header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="add-stock-container">
         <div id='add-stock-content'>
             <div id = 'add-stock-form'>
                 <h1><font face='Impact'>Add Stocks Form</font></h1>
-                <form action="{{route('add-stock')}}" method="post" enctype="multipart/form-data">
+                <form action="<?php echo e(route('add-stock')); ?>" method="post" enctype="multipart/form-data">
                     <!-- Print error message that stock was NOT updated -->
-                    @if(Session::has('success'))
-                    <div class="alert alert-success">{{Session::get('success')}}</div>
-                    @endif
-                    @if(Session::has('fail'))
-                    <div class="alert alert-danger">{{Session::get('fail')}}</div>
-                    @endif
-                    @csrf
+                    <?php if(Session::has('success')): ?>
+                    <div class="alert alert-success"><?php echo e(Session::get('success')); ?></div>
+                    <?php endif; ?>
+                    <?php if(Session::has('fail')): ?>
+                    <div class="alert alert-danger"><?php echo e(Session::get('fail')); ?></div>
+                    <?php endif; ?>
+                    <?php echo csrf_field(); ?>
                     <div class="form-group row">
                         <label for="ISBN13" class="col-4 col-form-label">ISBN-13</label> 
                         <div class="col-8">
                             <input id="ISBN13" name="ISBN13" placeholder="ISBN-13" type="text" class="form-control" 
-                            required="required" value="{{old('ISBN13')}}" onkeyup="getExistingStock(this.value)">
-                            <span class="text-danger">@error('ISBN13') {{$message}} @enderror</span>
+                            required="required" value="<?php echo e(old('ISBN13')); ?>" onkeyup="getExistingStock(this.value)">
+                            <span class="text-danger"><?php $__errorArgs = ['ISBN13'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="bookName" class="col-4 col-form-label">Book Name</label> 
                         <div class="col-8">
                             <input id="bookName" name="bookName" placeholder="Book Name" type="text" class="form-control" 
-                            required="required" value="{{old('bookName')}}">
-                            <span class="text-danger">@error('bookName') {{$message}} @enderror</span>
+                            required="required" value="<?php echo e(old('bookName')); ?>">
+                            <span class="text-danger"><?php $__errorArgs = ['bookName'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="bookDesc" class="col-4 col-form-label">Book Description</label> 
                         <div class="col-8">
                             <textarea id="bookDesc" name="bookDesc" placeholder="Book Description" class="form-control" 
-                            rows="5" required="required" value="{{old('bookDesc')}}"></textarea>
-                            <span class="text-danger">@error('bookDesc') {{$message}} @enderror</span>
+                            rows="5" required="required" value="<?php echo e(old('bookDesc')); ?>"></textarea>
+                            <span class="text-danger"><?php $__errorArgs = ['bookDesc'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="bookAuthor" class="col-4 col-form-label">Book Author</label> 
                         <div class="col-8">
                             <input id="bookAuthor" name="bookAuthor" placeholder="Book Author" type="text" class="form-control" 
-                            required="required" value="{{old('bookAuthor')}}">
-                            <span class="text-danger">@error('bookAuthor') {{$message}} @enderror</span>
+                            required="required" value="<?php echo e(old('bookAuthor')); ?>">
+                            <span class="text-danger"><?php $__errorArgs = ['bookAuthor'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="publicationDate" class="col-4 col-form-label">Publication Date</label> 
                         <div class="col-8">
                             <input id="publicationDate" name="publicationDate" placeholder="Publication Date" type="date" 
-                            class="form-control" required="required" value="{{old('publicationDate')}}">
-                            <span class="text-danger">@error('publicationDate') {{$message}} @enderror</span>
+                            class="form-control" required="required" value="<?php echo e(old('publicationDate')); ?>">
+                            <span class="text-danger"><?php $__errorArgs = ['publicationDate'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>
                     </div>
                     <div class="form-group row">
                         <label for="tradePrice" class="col-4 col-form-label">Trade Price</label>
                         <div class="col-8">
                             <input id="tradePrice" name="tradePrice" type="number" step="0.01" required="required" min="20" max="100"
-                            value="{{old('tradePrice')}}" placeholder="0.00" class="form-control">    
+                            value="<?php echo e(old('tradePrice')); ?>" placeholder="0.00" class="form-control">    
                             <div id="sliderBox">
                                 <input type="range" id="tradePriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
                             </div>
                         </div>
-                        <span class="text-danger">@error('tradePrice') {{$message}} @enderror</span>  
+                        <span class="text-danger"><?php $__errorArgs = ['tradePrice'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>  
                     </div>
                     <div class="form-group row">
                         <label for="retailPrice" class="col-4 col-form-label">Retail Price</label>
                         <div class="col-8">
                         <input id="retailPrice" name="retailPrice" type="number" step="0.01" required="required" min="20" max="100"
-                            value="{{old('retailPrice')}}" placeholder="0.00" class="form-control">   
+                            value="<?php echo e(old('retailPrice')); ?>" placeholder="0.00" class="form-control">   
                             <div id="sliderBox">
                                 <input type="range" id="retailPriceSlider" step="0.01" min="20" max="100" class="form-control" required="required">
                             </div>
                         </div>
-                        <span class="text-danger">@error('retailPrice') {{$message}} @enderror</span>
+                        <span class="text-danger"><?php $__errorArgs = ['retailPrice'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                     </div>   
                     <div class="form-group row">
                         <label for="qty" class="col-4 col-form-label">Quantity</label>
                         <div class="col-8">
                         <input id="qty" name="qty" placeholder="Quantity" type="number" 
-                            class="form-control" required="required" value="{{old('qty')}}">
-                            <span class="text-danger">@error('qty') {{$message}} @enderror</span>
+                            class="form-control" required="required" value="<?php echo e(old('qty')); ?>">
+                            <span class="text-danger"><?php $__errorArgs = ['qty'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?> <?php echo e($message); ?> <?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?></span>
                         </div>  
                     </div>
                     <div class="input-group mb-4">
@@ -113,7 +169,7 @@
                     <br>
                 </form> 
             </div>
-            @include('footer')
+            <?php echo $__env->make('footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
         </div>
     </div>
 
@@ -124,7 +180,7 @@
     </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
     </script>
-    <script type="text/javascript" src="{{ URL::asset('js/addStock.js') }}">
+    <script type="text/javascript" src="<?php echo e(URL::asset('js/addStock.js')); ?>">
     </script>
     <script>
         function getExistingStock(str) {
@@ -174,7 +230,7 @@
                 };
                 // open xml http request
                 xmlhttp.open("POST", "addStocks/get-stock", true);
-                var data = '_token={{csrf_token()}}&ISBN13=' + str;
+                var data = '_token=<?php echo e(csrf_token()); ?>&ISBN13=' + str;
                 xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
                 // xhttp.open("GET", "filename", true);
                 // Sends the request to the server
@@ -185,3 +241,4 @@
 </body>
 </html>
 
+<?php /**PATH C:\HongKai\Software\xampp\htdocs\Book_Shop\resources\views/addStocks.blade.php ENDPATH**/ ?>
