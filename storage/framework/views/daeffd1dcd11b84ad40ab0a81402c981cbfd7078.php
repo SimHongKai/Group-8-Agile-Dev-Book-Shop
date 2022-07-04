@@ -1,31 +1,31 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="<?php echo e(str_replace('_', '-', app()->getLocale())); ?>">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf_token" content="{{ csrf_token() }}">
+    <meta name="csrf_token" content="<?php echo e(csrf_token()); ?>">
     <meta http-equiv="X-UA-Compatible" content="ie-edge">
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/bootstrap.css') }}"> 
+    <link rel="stylesheet" type="text/css" href="<?php echo e(asset('css/bootstrap.css')); ?>"> 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">-->
     <title>Checkout</title>
 </head>
 
 <body>
-    @include('header')
+    <?php echo $__env->make('header', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     <div class="add-stock-container">
         <div id='add-stock-content'>
                 <h1><font face='Impact'>Checkout</font></h1>
                 
                 <!-- Display items removed from shopping cart due to insufficient stock -->
-                @if($insufficientStock)
+                <?php if($insufficientStock): ?>
                     <div class="alert alert-success">
                         <p>The following items were removed from your shopping cart due to insufficient stock:</p>
-                        @foreach($insufficientStock as $bookName => $qtyChanged) 
-                            <p>{{ $bookName }}: {{ $qtyChanged }}</p>
-                        @endforeach
+                        <?php $__currentLoopData = $insufficientStock; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $bookName => $qtyChanged): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> 
+                            <p><?php echo e($bookName); ?>: <?php echo e($qtyChanged); ?></p>
+                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     </div>
-                @endif
+                <?php endif; ?>
                 <table cellspacing="10">
                     <tr>
                         <td>
@@ -45,25 +45,25 @@
                         <th>Quantity</th>
                         <th>Total Price</th>
                     </tr>
-                    @if(!$shoppingCart->isEmpty())
-                    @foreach($shoppingCart as $shoppingCarts) 
+                    <?php if(!$shoppingCart->isEmpty()): ?>
+                    <?php $__currentLoopData = $shoppingCart; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $shoppingCarts): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?> 
                     <?php
                     $price = Session::get('priceItem');
                     $itemCount = Session::get('numItem');
                     ?>
-                    <tr id = "{{ $shoppingCarts->ISBN13}}Row">
-                    <td><img src="{{ asset('book_covers')}}/{{$shoppingCarts->coverImg }}" width="150px" height="200px"></td>
-                        <td>{{ $shoppingCarts -> bookName }}</td>
+                    <tr id = "<?php echo e($shoppingCarts->ISBN13); ?>Row">
+                    <td><img src="<?php echo e(asset('book_covers')); ?>/<?php echo e($shoppingCarts->coverImg); ?>" width="150px" height="200px"></td>
+                        <td><?php echo e($shoppingCarts -> bookName); ?></td>
                         <!-- Price per unit of the book -->
-                        <td>{{ $shoppingCarts -> retailPrice }}</td>
+                        <td><?php echo e($shoppingCarts -> retailPrice); ?></td>
                         <td>
                         <!--Current quantity-->
-                        <p id ="{{ $shoppingCarts->ISBN13}}Qty">{{ $shoppingCarts -> qty }}</p>
+                        <p id ="<?php echo e($shoppingCarts->ISBN13); ?>Qty"><?php echo e($shoppingCarts -> qty); ?></p>
                         </td>
                         <!-- Total price of the book -->
-                        <td id = "{{ $shoppingCarts->ISBN13}}Price"><p>RM{{ $shoppingCarts -> retailPrice * $shoppingCarts -> qty }}</p></td>
+                        <td id = "<?php echo e($shoppingCarts->ISBN13); ?>Price"><p>RM<?php echo e($shoppingCarts -> retailPrice * $shoppingCarts -> qty); ?></p></td>
                     </tr>
-                    @endforeach
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                     <!-- Retrieve item quantity and total price-->
                     <?php
                     $price = Session::get('priceItem');
@@ -95,16 +95,16 @@
                         <th><p id = "shippingPrice">RM<?php echo $shippingPrice ?></p></th>
                     </tr>
                 </table>
-                @endif
+                <?php endif; ?>
                 <table cellspacing="10">
                     <tr>
                         <td>
-                            <br><a href="{{ route('payment')}}"><button class="btn btn-block btn-primary" onclick="return confirm('Continue to payment?')" type="submit"><b>Pay Now</b></button></a>
+                            <br><a href="<?php echo e(route('payment')); ?>"><button class="btn btn-block btn-primary" onclick="return confirm('Continue to payment?')" type="submit"><b>Pay Now</b></button></a>
                         </td>
                     </tr>
                 </table>
         </div>
-        @include('footer')
+        <?php echo $__env->make('footer', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.min.js">
@@ -151,4 +151,4 @@
     </script>
     -->
 </body>
-</html>
+</html><?php /**PATH C:\HongKai\Software\xampp\htdocs\Book_Shop\resources\views/checkout.blade.php ENDPATH**/ ?>

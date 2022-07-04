@@ -48,6 +48,8 @@ class PaymentController extends Controller{
             $this->paymentFormValidation($requests);
             $shippingAddress = $this->getSessionShippingAddress();
             isset($shippingAddress['country']);
+
+            //put into Orders
             $newOrder = new Orders();
             $newOrder->userID = $userId;
             $newOrder->basePrice = $this->getBasePrice();
@@ -58,27 +60,34 @@ class PaymentController extends Controller{
             $newOrder->district = Session::get('shippingDistrict');
             $newOrder->postcode = Session::get('shippingPostcode');
             $newOrder->address = Session::get('shippingAddress');
-
+            
+            //Got save to Orders
             $res = $newOrder->save();
+            //Take first ID
             $orderId = Orders::where('userID','=',$userId)->latest('orderID')->limit('1')->pluck('orderID');
 
             if($res && $orderId){
                 $cartItem = CartItem::where('userID','=',$userId)->get();
+                //put into order items
                 foreach($cartItem as $cartItems){
                     $orderItem = new OrderItem();
                     $orderItem->orderID = $orderId[0];
                     $orderItem->ISBN13 = $cartItems->ISBN13;
                     $orderItem->qty = $cartItems->qty;
-                    $saveitems = $orderItem->save();
-                    
-                    if($saveitems){
+                    $uploadStatus = $this->uploadToOrderItemDB($orderItem);
+
+                    //reduce stock
+                    if($uploadStatus){
                         $minusStock = Stock::where('ISBN13','=',$cartItems->ISBN13)->first();
-                        $minusStock->qty = $minusStock->qty - $cartItems->qty;
+                        $oriVal=$minusStock->qty;
+                        $deductVal=$cartItems->qty;
+                        $minusStock->qty = $this->minusQuantity($oriVal,$deductVal);
                         $newRes = $minusStock->save();
                     }
                 }
-                    
+                // clear shopping cart
                 $clearCart = CartItem::where('userID','=',$userId)->delete();
+
                 if($clearCart){
                     $this->resetSessionCartData();
                     // send payment confirmation email here
@@ -87,6 +96,7 @@ class PaymentController extends Controller{
                 }
                 else{
                     return redirect("home")->with('fail','Fail to process payment. Please try again');
+                    //return back()->with('fail','Fail to process payment. Please try again');
                 }
             }
             else{
@@ -94,6 +104,18 @@ class PaymentController extends Controller{
             }
         }
 
+    }
+
+    public function uploadToOrderItemDB($orderItem){
+        $saveitems = $orderItem->save();
+        if($saveitems){
+            return TRUE;
+        }
+    }
+
+    public function minusQuantity($oriVal,$deductVal){
+        $newVal = $oriVal-$deductVal;
+        return $newVal;
     }
 
     public function paymentFormValidation(Request $requests){
@@ -259,7 +281,10 @@ class PaymentController extends Controller{
     }
 
     public function getOrder($orderID){
-        $order = Orders::find($orderID)->first();
+        $order = Orders::find($orderID);
+        if ($order){
+            $order = $order->first();
+        }
         return $order;
     }
 }
