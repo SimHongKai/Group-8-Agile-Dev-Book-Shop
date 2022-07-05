@@ -83,4 +83,19 @@ class loginUnitTest extends TestCase
         $this->assertEquals(TRUE,$checkStatus);
     }
 
+    public function test_logout(){
+        Session::put('userId',1);
+        Session::put('userPrivilige',2);
+
+        $getFunction = new \App\Http\Controllers\CustomAuthController;
+        $userStatus = $getFunction -> logout();
+        
+        $compareuserId = Session::get('userId');
+        $compareuserPriv = Session::get('userPrivilige');
+        
+        if($userStatus && $compareuserId!=1 && $compareuserPriv!=2){
+            $checkStatus=TRUE;
+        }
+        $this->assertEquals(TRUE,$checkStatus);
+    }
 }
