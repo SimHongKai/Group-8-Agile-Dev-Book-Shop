@@ -3,7 +3,7 @@
 namespace Tests\Unit;
 
 use Illuminate\Http\Request;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Illuminate\Foundation\Testing\WithoutMiddleware;
 use UsersTableSeeder;
 use App\Models\User;
@@ -12,7 +12,7 @@ use Session;
 
 class loginUnitTest extends TestCase
 {
-
+    use DatabaseTransactions;
     /**
      * A basic feature test example.
      *
