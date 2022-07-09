@@ -4,18 +4,17 @@ namespace Tests\Unit;
 
 use Tests\TestCase;
 use Session;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 use App\Models\CartItem;
 
 class CartProcessingTest extends TestCase
 {
+    use DatabaseTransactions;
     /**
      * A basic unit test example.
      *
      * @return void
      */
-    
-    //use RefreshDatabase;
 
     public function test_calculate_quantity_header_validation()
     {  
